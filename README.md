@@ -349,7 +349,7 @@ per edit by ~85%.
 
 ## Project Phases
 
-### ✅ Phase 1 — Frontend Foundation (Current)
+### Phase 1 — Frontend Foundation (Current)
 
 **Goal:** Complete, polished, demo-ready UI with mock data.  
 A recruiter clicking the live link should see a real product, not a skeleton.
