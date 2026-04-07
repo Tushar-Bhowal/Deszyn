@@ -129,20 +129,20 @@ export function KineticNavigation({ isOpen, onClose, onToggle }: KineticNavigati
         onClick={onToggle}
         aria-label={isOpen ? "Close menu" : "Open menu"}
         className="
-          md:hidden fixed z-[200]
+          lg:hidden fixed z-[200]
           flex items-center justify-center
           w-10 h-10 rounded-lg
           border border-white/10 bg-white/5
           hover:bg-white/10 transition-colors text-white
         "
         style={{
-          top: "0.75rem",    /* 12px — aligns with h-16 navbar */
-          right: "1.5rem",   /* 24px — matches px-6 */
+          top: "1.25rem",    /* 20px — perfectly centered in h-[80px] header */
+          right: "2.5rem",   /* 40px — aligns with px-10 padding in Navbar.tsx */
         }}
       >
         <MenuToggleIcon
           open={isOpen}
-          className="size-5"
+          className="size-6"
           duration={500}
         />
       </button>
@@ -150,7 +150,7 @@ export function KineticNavigation({ isOpen, onClose, onToggle }: KineticNavigati
       {/* ── Full-screen menu overlay ── */}
       <AnimatePresence>
         {isOpen && (
-          <div className="fixed inset-0 z-[100] md:hidden">
+          <div className="fixed inset-0 z-[100] lg:hidden">
 
             {/* Click-outside overlay */}
             <motion.div
