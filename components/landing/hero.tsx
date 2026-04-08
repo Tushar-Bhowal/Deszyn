@@ -2,7 +2,12 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { IconArrowRight, IconPlayerPlay, IconSparkles } from "@tabler/icons-react";
+import {
+  IconArrowRight,
+  IconPlayerPlay,
+  IconSparkles,
+} from "@tabler/icons-react";
+import HeroBackground from "./hero-background";
 
 const containerVariants = {
   hidden: {},
@@ -23,25 +28,8 @@ const itemVariants = {
 export function Hero() {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center pt-16 pb-24 px-6 overflow-hidden">
-
-      {/* Background radial glow — blue only, subtle */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        aria-hidden
-      >
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] rounded-full bg-primary/8 blur-[120px]" />
-        <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] rounded-full bg-primary/5 blur-[80px]" />
-      </div>
-
-      {/* Grid dot pattern */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.03]"
-        style={{
-          backgroundImage: `radial-gradient(circle, oklch(0.9 0 0) 1px, transparent 1px)`,
-          backgroundSize: "32px 32px",
-        }}
-        aria-hidden
-      />
+      {/* WebGL Hero Background */}
+      <HeroBackground />
 
       <motion.div
         variants={containerVariants}
@@ -66,21 +54,22 @@ export function Hero() {
         >
           Your{" "}
           <span className="relative">
-            <span
-              className="bg-gradient-to-r from-primary via-primary/90 to-blue-400 bg-clip-text text-transparent"
-            >
+            <span className="bg-linear-to-r from-primary via-primary/90 to-blue-400 bg-clip-text text-transparent">
               Design System
             </span>
             {/* Underline glow */}
             <motion.span
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ delay: 0.9, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-primary/0 via-primary/60 to-primary/0 origin-left"
+              transition={{
+                delay: 0.9,
+                duration: 0.6,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="absolute -bottom-1 left-0 right-0 h-px bg-linear-to-r from-primary/0 via-primary/60 to-primary/0 origin-left"
             />
           </span>
-          ,{" "}
-          <br className="hidden sm:block" />
+          , <br className="hidden sm:block" />
           Generated in 60 Seconds
         </motion.h1>
 
@@ -90,7 +79,11 @@ export function Hero() {
           className="text-lg text-muted-foreground max-w-[600px] leading-relaxed mb-10"
         >
           Describe your idea or paste any URL. Get production-ready React
-          components, <code className="font-mono text-sm text-foreground/70 bg-muted px-1.5 py-0.5 rounded">global.css</code> and design tokens.{" "}
+          components,{" "}
+          <code className="font-mono text-sm text-foreground/70 bg-muted px-1.5 py-0.5 rounded">
+            global.css
+          </code>{" "}
+          and design tokens.{" "}
           <span className="text-foreground/80">No design skills needed.</span>
         </motion.p>
 
@@ -106,7 +99,8 @@ export function Hero() {
               backgroundColor: "rgb(0, 85, 254)",
               border: "1px solid rgba(255, 255, 255, 0.15)",
               borderRadius: "10px",
-              boxShadow: "0 8px 40px 0 rgba(0, 85, 255, 0.5), 0 0 10px 1px rgba(255, 255, 255, 0) inset, 0 0 0 1px rgba(0, 85, 255, 0.12)",
+              boxShadow:
+                "0 8px 40px 0 rgba(0, 85, 255, 0.5), 0 0 10px 1px rgba(255, 255, 255, 0) inset, 0 0 0 1px rgba(0, 85, 255, 0.12)",
             }}
           >
             Start Generating Free
@@ -135,14 +129,16 @@ export function Hero() {
         </motion.div>
 
         {/* Hero dashboard mockup */}
-        <motion.div
-          variants={itemVariants}
-          className="mt-16 w-full max-w-5xl"
-        >
+        <motion.div variants={itemVariants} className="mt-16 w-full max-w-5xl">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, type: "spring", damping: 25, stiffness: 120 }}
+            transition={{
+              delay: 0.8,
+              type: "spring",
+              damping: 25,
+              stiffness: 120,
+            }}
             className="relative rounded-2xl border border-border/60 bg-card/50 backdrop-blur-sm overflow-hidden shadow-2xl shadow-black/50"
           >
             {/* Browser chrome bar */}
@@ -168,7 +164,7 @@ export function Hero() {
                       key={i}
                       className="h-8 rounded-lg bg-muted/40 flex items-center px-3 gap-2"
                     >
-                      <div className="w-3.5 h-3.5 rounded bg-muted/60 flex-shrink-0" />
+                      <div className="w-3.5 h-3.5 rounded bg-muted/60 shrink-0" />
                       <div
                         className="h-2 bg-muted/60 rounded-full"
                         style={{ width: `${w}%` }}
@@ -183,7 +179,7 @@ export function Hero() {
                 {/* Chat input area */}
                 <div className="flex items-center gap-3 p-3 rounded-xl border border-border/50 bg-muted/20">
                   <div className="flex-1 h-5 bg-muted/40 rounded-full w-3/4" />
-                  <div className="w-8 h-8 rounded-lg bg-primary/80 flex-shrink-0" />
+                  <div className="w-8 h-8 rounded-lg bg-primary/80 shrink-0" />
                 </div>
 
                 {/* Generated sections preview */}

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { KineticNavigation } from "@/components/ui/kinetic-navigation";
+import { cn } from "@/lib/utils";
+import { MobileNavigation } from "@/components/ui/mobile-navigation";
 
 const navLinks = [
   { label: "Features", href: "#features" },
@@ -15,16 +16,53 @@ const navLinks = [
   { label: "Contact", href: "#contact" },
 ];
 
+interface Highlight {
+  x: number;
+  width: number;
+}
+
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [highlight, setHighlight] = useState<Highlight | null>(null);
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
 
+  const pillRef = useRef<HTMLDivElement>(null);
+  const hoverActive = useRef<boolean>(false);
+  const justHovered = useRef<boolean>(false);
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const linkRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+  const [fadingOut, setFadingOut] = useState(false);
+
+  // Only shrink on desktop ≥1024px
+  const shouldShrink = isDesktop && scrolled;
+
+  // desktop + scroll detection
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const mq = window.matchMedia("(min-width: 1024px)");
+
+    const update = () => {
+      const desktop = mq.matches;
+      setIsDesktop(desktop);
+      setScrolled(desktop ? window.scrollY > 80 : false);
+    };
+
+    const onScroll = () =>
+      setScrolled(mq.matches ? window.scrollY > 80 : false);
+
+    update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    mq.addEventListener("change", update);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      mq.removeEventListener("change", update);
+    };
   }, []);
 
+  // body lock
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => {
@@ -32,25 +70,135 @@ export function Navbar() {
     };
   }, [mobileOpen]);
 
+  // cleanup
+  useEffect(() => {
+    return () => {
+      if (leaveTimer.current) clearTimeout(leaveTimer.current);
+    };
+  }, []);
+
+  // move highlight
+  const moveToLabel = useCallback((label: string) => {
+    const el = linkRefs.current.get(label);
+    const pill = pillRef.current;
+    if (!el || !pill) return;
+    const pillRect = pill.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    setHighlight({ x: elRect.left - pillRect.left - 6, width: elRect.width });
+  }, []);
+
+  // scroll-spy
+  useEffect(() => {
+    const sectionIds = navLinks.map((l) => l.href.slice(1));
+    const visible = new Set<string>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) visible.add(entry.target.id);
+          else visible.delete(entry.target.id);
+        });
+        setActiveSection(sectionIds.find((id) => visible.has(id)) ?? null);
+      },
+      { rootMargin: "-20% 0px -60% 0px", threshold: 0 },
+    );
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // sync highlight to active section only when not hovering
+  useEffect(() => {
+    if (hoverActive.current || hoveredLink || justHovered.current || fadingOut)
+      return;
+    if (!activeSection) {
+      setHighlight(null);
+      return;
+    }
+    const match = navLinks.find((l) => l.href === `#${activeSection}`);
+    if (match) requestAnimationFrame(() => moveToLabel(match.label));
+  }, [activeSection, moveToLabel, hoveredLink, fadingOut]);
+
+  // ── click handler ─────────────────────────────────────────────
+  const handleClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+    label: string,
+  ) => {
+    e.preventDefault();
+    if (leaveTimer.current) clearTimeout(leaveTimer.current);
+    hoverActive.current = false;
+    moveToLabel(label);
+    document
+      .getElementById(href.slice(1))
+      ?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // hover handlers
+  const handlePillMouseLeave = () => {
+    if (leaveTimer.current) clearTimeout(leaveTimer.current);
+
+    setHoveredLink(null);
+    setFadingOut(true); // ← block activeSection sync during fade
+    hoverActive.current = false;
+    justHovered.current = false;
+
+    leaveTimer.current = setTimeout(() => {
+      setFadingOut(false); // ← now allow re-sync
+      setHighlight(null); // ← clear position after fade completes
+    }, 220);
+  };
+  const handleLinkMouseEnter = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    label: string,
+  ) => {
+    if (leaveTimer.current) clearTimeout(leaveTimer.current);
+    hoverActive.current = true;
+    justHovered.current = true;
+    setHoveredLink(label);
+    const pill = pillRef.current;
+    if (!pill) return;
+    const pillRect = pill.getBoundingClientRect();
+    const elRect = e.currentTarget.getBoundingClientRect();
+    setHighlight({ x: elRect.left - pillRect.left - 6, width: elRect.width });
+  };
+
   return (
     <>
-      <motion.header
+      {/*
+       * Outer wrapper: entrance animation only.
+       * pointer-events:none so the transparent gap never blocks clicks.
+       */}
+      <motion.div
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{
-          type: "spring" as const,
-          damping: 30,
-          stiffness: 200,
-          delay: 0.1,
-        }}
-        className={`fixed top-0 left-0 right-0 mx-auto w-full h-[80px] max-w-[1440px] z-50 transition-all duration-500 ${
-          scrolled
-            ? "bg-[#0d0d0f]/80 backdrop-blur-xl border-b border-white/5 shadow-2xl shadow-black/40"
-            : "bg-transparent"
-        }`}
+        transition={{ type: "spring", damping: 30, stiffness: 200, delay: 0.1 }}
+        className="fixed top-0 left-0 right-0 z-50 flex justify-center"
+        style={{ pointerEvents: "none" }}
       >
-        <nav className="relative max-w-full w-full px-10 h-full flex items-center justify-between gap-6">
-          {/* Logo */}
+        <div
+          style={{ pointerEvents: "auto" }}
+          className={cn(
+            "relative flex w-full items-center justify-between",
+            "border border-transparent",
+            "transition-all duration-500 ease-out",
+            !shouldShrink && [
+              "max-w-[1440px] h-[80px] px-4 sm:px-6 lg:px-10 gap-6",
+              "rounded-none bg-transparent",
+            ],
+            shouldShrink && [
+              "mt-3 max-w-3xl px-3 py-2 gap-3",
+              "rounded-[14px]",
+              "bg-[rgba(13,13,15,0.88)] backdrop-blur-xl",
+              "border-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.50)]",
+            ],
+          )}
+        >
+          {/* ── Logo ── */}
           <Link
             href="/"
             className="flex items-center gap-2.5 group flex-shrink-0"
@@ -60,70 +208,139 @@ export function Navbar() {
               alt="Deszyn"
               width={28}
               height={28}
+              loading="eager"
+              priority
               className="rounded-md group-hover:scale-105 transition-transform duration-300 w-auto h-auto"
             />
-            <span className="font-display font-bold text-lg tracking-tight text-white">
+            {/* Logo text fades + collapses on shrink */}
+            <span
+              className={cn(
+                "font-display font-bold text-lg tracking-tight text-white",
+                "overflow-hidden whitespace-nowrap",
+                "transition-all duration-500 ease-out",
+                shouldShrink
+                  ? "opacity-0 max-w-0"
+                  : "opacity-100 max-w-[120px]",
+              )}
+            >
               Deszyn
             </span>
           </Link>
 
-          {/* Desktop nav pill */}
+          {/* ── Desktop nav pill ── */}
           <div
-            className="absolute left-1/2 -translate-x-1/2 hidden lg:flex items-center px-1.5 py-1.5 gap-0.5"
-            style={{
-              background: "rgba(255, 255, 255, 0.04)",
-              border: "1px solid rgba(255, 255, 255, 0.08)",
-              borderRadius: "12px",
-            }}
+            ref={pillRef}
+            onMouseLeave={handlePillMouseLeave}
+            className={cn(
+              "hidden lg:flex items-center px-1.5 py-1.5 gap-0.5",
+              "transition-all duration-500 ease-out",
+              shouldShrink ? "relative" : "absolute left-1/2 -translate-x-1/2",
+            )}
+            style={
+              shouldShrink
+                ? {}
+                : {
+                    background: "rgba(10,10,15,0.75)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    borderRadius: "12px",
+                    backdropFilter: "blur(12px)",
+                  }
+            }
           >
+            {/* Sliding highlight */}
+            <span
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                top: "6px",
+                left: "6px",
+                height: "calc(100% - 12px)",
+                borderRadius: "8px",
+                background: "rgba(59,130,246,0.08)",
+                border: "1px solid rgba(96,165,250,0.6)",
+                boxShadow:
+                  "0 0 15px rgba(59,130,246,0.3), inset 0 0 10px rgba(59,130,246,0.1)",
+                pointerEvents: "none",
+                zIndex: 0,
+                // FIX: Use hoveredLink to control opacity primarily
+                opacity:
+                  hoveredLink || (activeSection && !hoverActive.current)
+                    ? 1
+                    : 0,
+                width: highlight ? `${highlight.width}px` : "80px",
+                transform: `translateX(${highlight?.x ?? 0}px)`,
+                transition:
+                  hoveredLink || activeSection
+                    ? "transform 0.35s cubic-bezier(0.34,1.18,0.64,1), width 0.35s cubic-bezier(0.34,1.18,0.64,1), opacity 0.2s ease"
+                    : "opacity 0.2s ease", // When disappearing, don't animate the 'transform'
+              }}
+            />
+
+            {/* Nav links */}
             {navLinks.map((link) => (
-              <Link
+              <a
                 key={link.label}
                 href={link.href}
-                className="px-4 py-2 text-sm text-white/50 hover:text-white transition-all duration-300 font-medium whitespace-nowrap"
+                ref={(el) => {
+                  if (el) linkRefs.current.set(link.label, el);
+                  else linkRefs.current.delete(link.label);
+                }}
+                onClick={(e) => handleClick(e, link.href, link.label)}
+                onMouseEnter={(e) => handleLinkMouseEnter(e, link.label)}
+                onMouseLeave={() => setHoveredLink(null)}
+                className={cn(
+                  "relative z-10 py-2 text-sm font-medium whitespace-nowrap",
+                  "transition-all duration-500 ease-out cursor-pointer",
+                  shouldShrink ? "px-[10px]" : "px-4",
+                )}
                 style={{
                   borderRadius: "8px",
-                  border: "1px solid transparent",
-                  boxShadow: "none",
-                  backgroundColor: "transparent",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    "rgba(59, 130, 246, 0.08)";
-                  e.currentTarget.style.borderColor = "rgba(96, 165, 250, 0.6)";
-                  e.currentTarget.style.boxShadow =
-                    "0 0 15px rgba(59, 130, 246, 0.3), inset 0 0 10px rgba(59, 130, 246, 0.1)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.borderColor = "transparent";
-                  e.currentTarget.style.boxShadow = "none";
+                  color:
+                    (activeSection && `#${activeSection}` === link.href) ||
+                    hoveredLink === link.label
+                      ? "rgb(150, 195, 255)"
+                      : "rgba(255,255,255,0.55)",
                 }}
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
           </div>
 
-          {/* Desktop CTA */}
-          <Link
+          {/* ── Desktop CTA ── */}
+          <motion.a
             href="/signup"
-            className="hidden lg:inline-flex items-center gap-2 text-sm font-semibold text-white px-4 py-2 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+            className="hidden lg:inline-flex items-center gap-2 text-sm font-semibold text-white px-4 py-2 flex-shrink-0 cursor-pointer select-none"
             style={{
               backgroundColor: "rgb(0, 85, 254)",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
+              border: "1px solid rgba(130,165,255,0.40)",
               borderRadius: "10px",
+              transition:
+                "box-shadow 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s ease",
               boxShadow:
-                "0 8px 40px 0 rgba(0, 85, 255, 0.5), 0 0 10px 1px rgba(255, 255, 255, 0) inset, 0 0 0 1px rgba(0, 85, 255, 0.12)",
+                "0 4px 24px rgba(0,85,255,0.30), inset 0 0 0px rgba(140,185,255,0)",
+            }}
+            whileHover={{ y: -1.5 }}
+            whileTap={{ y: 0, scale: 0.98 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow =
+                "0 0 0 2.5px rgba(100,150,255,0.55), " +
+                "0 0 18px 4px rgba(0,85,255,0.45), " +
+                "inset 0 0 28px rgba(140,190,255,0.40), " +
+                "inset 0 0 10px rgba(200,225,255,0.25)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow =
+                "0 4px 24px rgba(0,85,255,0.30), inset 0 0 0px rgba(140,185,255,0)";
             }}
           >
             Get Started Free
-          </Link>
-        </nav>
-      </motion.header>
+          </motion.a>
+        </div>
+      </motion.div>
 
-      {/* KineticNavigation owns the mobile toggle button */}
-      <KineticNavigation
+      <MobileNavigation
         isOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
         onToggle={() => setMobileOpen((v) => !v)}
