@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Plus_Jakarta_Sans,
+  Source_Serif_4,
+} from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -26,6 +31,13 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
+const sourceSerif = Source_Serif_4({
+  variable: "--font-source-serif",
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
   display: "swap",
 });
 
@@ -109,6 +121,7 @@ export default function RootLayout({
           ${geistSans.variable}
           ${geistMono.variable}
           ${plusJakartaSans.variable}
+          ${sourceSerif.variable}
           font-sans
           antialiased
           bg-background

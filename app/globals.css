@@ -38,10 +38,10 @@
   --sidebar-ring: oklch(0.6231 0.1880 259.8145);
 
   /* ── FONTS ── */
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: Source Serif 4, serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
-  --font-display: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif; /* ← NEW */
+  --app-font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --app-font-serif: var(--font-source-serif), Georgia, serif;
+  --app-font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  --app-font-display: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
 
   --radius: 0.375rem;
   --shadow-x: 0;
@@ -111,10 +111,10 @@
   --sidebar-ring: oklch(0.6231 0.1880 259.8145);
 
   /* ── FONTS (same in dark — variables don't change) ── */
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: Source Serif 4, serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
-  --font-display: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif; /* ← NEW */
+  --app-font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --app-font-serif: var(--font-source-serif), Georgia, serif;
+  --app-font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  --app-font-display: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
 
   --radius: 0.375rem;
   --shadow-x: 0;
@@ -167,10 +167,10 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-  --font-serif: var(--font-serif);
-  --font-display: var(--font-display);   /* ← use as font-display in JSX */
+  --font-sans: var(--app-font-sans);
+  --font-mono: var(--app-font-mono);
+  --font-serif: var(--app-font-serif);
+  --font-display: var(--app-font-display);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -194,18 +194,16 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-sans);
+    font-family: var(--app-font-sans);
   }
 
-  /* ── Display font for all headings ── */
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
-    letter-spacing: -0.02em;            /* tighter tracking looks premium */
+    font-family: var(--app-font-display);
+    letter-spacing: -0.02em;
   }
 
-  /* ── Mono font for all code elements ── */
   code, pre, kbd, samp {
-    font-family: var(--font-mono);
+    font-family: var(--app-font-mono);
   }
 
   html {
