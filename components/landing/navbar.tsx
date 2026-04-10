@@ -4,8 +4,10 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { MobileNavigation } from "@/components/ui/mobile-navigation";
+import { LightBeamButton } from "@/components/ui/light-beam-button";
 
 const navLinks = [
   { label: "Features", href: "#features" },
@@ -22,6 +24,7 @@ interface Highlight {
 }
 
 export function Navbar() {
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -201,7 +204,7 @@ export function Navbar() {
           {/* ── Logo ── */}
           <Link
             href="/"
-            className="flex items-center gap-2.5 group flex-shrink-0"
+            className="flex items-center gap-2.5 group shrink-0"
           >
             <Image
               src="/logo.png"
@@ -215,12 +218,12 @@ export function Navbar() {
             {/* Logo text fades + collapses on shrink */}
             <span
               className={cn(
-                "font-display font-bold text-lg tracking-tight text-white",
+                "font-display font-bold text-xl tracking-tight text-white",
                 "overflow-hidden whitespace-nowrap",
                 "transition-all duration-500 ease-out",
                 shouldShrink
                   ? "opacity-0 max-w-0"
-                  : "opacity-100 max-w-[120px]",
+                  : "opacity-100 max-w-30",
               )}
             >
               Deszyn
@@ -308,35 +311,12 @@ export function Navbar() {
           </div>
 
           {/* ── Desktop CTA ── */}
-          <motion.a
-            href="/signup"
-            className="hidden lg:inline-flex items-center gap-2 text-sm font-semibold text-white px-4 py-2 flex-shrink-0 cursor-pointer select-none"
-            style={{
-              backgroundColor: "rgb(0, 85, 254)",
-              border: "1px solid rgba(130,165,255,0.40)",
-              borderRadius: "10px",
-              transition:
-                "box-shadow 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s ease",
-              boxShadow:
-                "0 4px 24px rgba(0,85,255,0.30), inset 0 0 0px rgba(140,185,255,0)",
-            }}
-            whileHover={{ y: -1.5 }}
-            whileTap={{ y: 0, scale: 0.98 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow =
-                "0 0 0 2.5px rgba(100,150,255,0.55), " +
-                "0 0 18px 4px rgba(0,85,255,0.45), " +
-                "inset 0 0 28px rgba(140,190,255,0.40), " +
-                "inset 0 0 10px rgba(200,225,255,0.25)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow =
-                "0 4px 24px rgba(0,85,255,0.30), inset 0 0 0px rgba(140,185,255,0)";
-            }}
+          <LightBeamButton
+            onClick={() => router.push("/signup")}
+            className="hidden flex-shrink-0 px-5 py-2.5 text-sm font-semibold lg:inline-flex"
           >
-            Get Started Free
-          </motion.a>
+            Get Started
+          </LightBeamButton>
         </div>
       </motion.div>
 
