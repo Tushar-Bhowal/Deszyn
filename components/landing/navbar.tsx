@@ -180,7 +180,7 @@ export function Navbar() {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", damping: 30, stiffness: 200, delay: 0.1 }}
-        className="fixed top-0 left-0 right-0 z-50 flex justify-center"
+        className="fixed top-0 left-0 right-0 z-50 flex flex-col items-center"
         style={{ pointerEvents: "none" }}
       >
         <div
@@ -190,7 +190,7 @@ export function Navbar() {
             "border border-transparent",
             "transition-all duration-500 ease-out",
             !shouldShrink && [
-              "max-w-[1440px] h-[80px] px-4 sm:px-6 lg:px-10 gap-6",
+              "max-w-7xl h-[80px] px-4 sm:px-6 lg:px-8 gap-6",
               "rounded-none bg-transparent",
             ],
             shouldShrink && [
@@ -318,6 +318,14 @@ export function Navbar() {
             Get Started
           </LightBeamButton>
         </div>
+
+        {/* Full-width navbar border — only when expanded */}
+        {!shouldShrink && (
+          <div
+            className="w-full border-b border-white/[0.06]"
+            style={{ pointerEvents: "none" }}
+          />
+        )}
       </motion.div>
 
       <MobileNavigation
