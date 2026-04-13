@@ -186,15 +186,16 @@ export function Navbar() {
         <div
           style={{ pointerEvents: "auto" }}
           className={cn(
-            "relative flex w-full items-center justify-between",
+            "relative flex items-center justify-between",
             "border border-transparent",
             "transition-all duration-500 ease-out",
             !shouldShrink && [
-              "max-w-7xl h-[80px] px-4 sm:px-6 lg:px-8 gap-6",
+              "w-[calc(100%-2rem)] sm:w-[calc(100%-4rem)] max-w-7xl h-[80px]",
+              "px-4 sm:px-6 lg:px-10 gap-6",
               "rounded-none bg-transparent",
             ],
             shouldShrink && [
-              "mt-3 max-w-3xl px-3 py-2 gap-3",
+              "mt-3 w-[calc(100%-24px)] md:w-full max-w-3xl px-3 py-2 gap-3",
               "rounded-[14px]",
               "bg-[rgba(13,13,15,0.88)] backdrop-blur-xl",
               "border-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.50)]",
@@ -315,7 +316,7 @@ export function Navbar() {
             onClick={() => router.push("/signup")}
             className="hidden flex-shrink-0 px-5 py-2.5 text-sm font-semibold lg:inline-flex"
           >
-            Get Started
+            Login / Register
           </LightBeamButton>
         </div>
 

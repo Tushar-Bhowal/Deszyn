@@ -7,10 +7,9 @@ import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 
 import { TimelineAnimation } from "@/components/ui/timeline-animation";
-import { LightBeamButton }   from "@/components/ui/light-beam-button";
-import RotatingText          from "@/components/ui/rotating-text";
-import SocialProofCounter    from "@/components/ui/social-proof-counter";
-import HeroBackground        from "./hero-background";
+import { LightBeamButton } from "@/components/ui/light-beam-button";
+import RotatingText from "@/components/ui/rotating-text";
+import HeroBackground from "./hero-background";
 
 const heroCopyVariants: Variants = {
   hidden: {
@@ -52,11 +51,9 @@ export function Hero() {
 
       {/* ── Content ── */}
       <div className="relative z-10 flex flex-col">
-
         {/* ─── Zone: Copy + CTA + Social Proof ─── */}
-        <div className="border-b border-white/[0.06] px-4 pt-32 pb-12 sm:px-6 md:pt-36 lg:px-8">
-          <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 text-center">
-
+        <div className="border-b border-white/6 px-4 pt-32 pb-12 sm:px-6 md:pt-36 lg:px-8">
+          <div className="mx-auto flex max-w-7xl w-full px-2 flex-col items-center gap-6 text-center">
             {/* Badge */}
             <TimelineAnimation
               animationNum={0}
@@ -78,20 +75,23 @@ export function Hero() {
               animationNum={1}
               customVariants={heroCopyVariants}
               timelineRef={timelineRef}
-              className="max-w-5xl text-balance font-display text-5xl font-medium tracking-[-0.04em] text-white sm:text-6xl lg:text-8xl"
+              className="mx-auto flex w-full max-w-none flex-col items-center justify-center text-center font-display text-5xl font-medium tracking-tight text-white sm:text-6xl lg:text-[4rem] lg:leading-[1.1] xl:text-[4.5rem]"
             >
-              <span className="block">Your Logo, Name,</span>
+              {/* Line 1 — explicitly wide */}
+              <span className="block w-full">
+                Describe Your Idea & Get a
+              </span>
 
-              <span className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-3">
-                <span>and UI —</span>
+              {/* Line 2 — explicitly centered flex container */}
+              <span className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-3 sm:gap-x-4 pt-2">
+                <span>Full UI —</span>
 
-                {/* Rotating last word — solid blue bg + white text */}
                 <RotatingText
                   texts={[
+                    "Instantly.",
                     "in Seconds.",
-                    "without Figma.",
                     "no Designers.",
-                    "just Describe.",
+                    "just Ship.",
                   ]}
                   splitBy="words"
                   staggerFrom="last"
@@ -102,7 +102,7 @@ export function Hero() {
                   transition={{ type: "spring", damping: 26, stiffness: 340 }}
                   rotationInterval={2400}
                   mainClassName={[
-                    "px-5 py-1.5 rounded-xl overflow-hidden",
+                    "px-4 py-1.5 sm:px-5 sm:py-1.5 rounded-xl overflow-hidden",
                     "text-white justify-center",
                   ].join(" ")}
                   style={{
@@ -124,9 +124,9 @@ export function Hero() {
               timelineRef={timelineRef}
               className="max-w-3xl text-pretty px-2 text-lg leading-8 text-white/70 sm:text-xl"
             >
-              Describe your idea or paste any URL. Deszyn instantly generates
-              your project name, logo, color tokens, and complete UI — ready
-              to ship. No designer. No Figma. Just build.
+              Paste any URL or describe your product in plain English. Deszyn
+              generates your logo, brand name, and full UI — ready to ship. No
+              designer. No Figma.
             </TimelineAnimation>
 
             {/* CTA */}
@@ -136,7 +136,9 @@ export function Hero() {
               timelineRef={timelineRef}
               className="flex flex-col items-center gap-4 pt-2 sm:flex-row"
             >
-              <LightBeamButton onClick={() => (window.location.href = "/signup")}>
+              <LightBeamButton
+                onClick={() => (window.location.href = "/signup")}
+              >
                 Get Started Free
                 <ArrowUpRight size={15} />
               </LightBeamButton>
@@ -161,14 +163,14 @@ export function Hero() {
             </TimelineAnimation>
 
             {/* Social proof */}
-            <TimelineAnimation
+            {/* <TimelineAnimation
               animationNum={3}
               customVariants={heroCopyVariants}
               timelineRef={timelineRef}
               className="pt-1"
             >
               <SocialProofCounter totalCount={100} />
-            </TimelineAnimation>
+            </TimelineAnimation> */}
           </div>
         </div>
 
@@ -189,7 +191,6 @@ export function Hero() {
             />
           </TimelineAnimation>
         </div>
-
       </div>
     </section>
   );

@@ -2,8 +2,9 @@
 
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { MenuToggleIcon } from "@/components/ui/menu-toggle-icon";
+import { LightBeamButton } from "@/components/ui/light-beam-button";
 
 const mainEase = [0.65, 0.01, 0.05, 0.99] as const;
 
@@ -53,6 +54,8 @@ export function MobileNavigation({
   onClose,
   onToggle,
 }: MobileNavigationProps) {
+  const router = useRouter();
+
   return (
     <>
       {/* Toggle button — always rendered, always on top */}
@@ -197,20 +200,15 @@ export function MobileNavigation({
                     transition: { delay: 0, duration: 0.15, ease: mainEase },
                   }}
                 >
-                  <Link
-                    href="/signup"
-                    onClick={onClose}
-                    className="flex w-full items-center justify-center gap-2 text-base font-semibold text-white py-4"
-                    style={{
-                      backgroundColor: "rgb(0, 85, 254)",
-                      border: "1px solid rgba(255, 255, 255, 0.15)",
-                      borderRadius: "10px",
-                      boxShadow:
-                        "0 8px 40px 0 rgba(0, 85, 255, 0.5), 0 0 10px 1px rgba(255, 255, 255, 0) inset, 0 0 0 1px rgba(0, 85, 255, 0.12)",
+                  <LightBeamButton
+                    onClick={() => {
+                      onClose();
+                      router.push("/signup");
                     }}
+                    className="flex w-full items-center justify-center gap-2 text-base font-semibold py-4 h-auto"
                   >
                     Get Started Free →
-                  </Link>
+                  </LightBeamButton>
                 </motion.div>
               </div>
             </div>
