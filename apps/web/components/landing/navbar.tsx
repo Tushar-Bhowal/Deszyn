@@ -313,8 +313,8 @@ export function Navbar() {
 
           {/* ── Desktop CTA ── */}
           <LightBeamButton
-            onClick={() => router.push("/signup")}
-            className="hidden flex-shrink-0 px-5 py-2.5 text-sm font-semibold lg:inline-flex"
+            onClick={() => router.push("/auth")}
+            className="hidden shrink-0 px-5 py-2.5 text-sm font-semibold lg:inline-flex"
           >
             Login / Register
           </LightBeamButton>

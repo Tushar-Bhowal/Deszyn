@@ -6,10 +6,10 @@ export default function LandingPage() {
     <main className="relative bg-background min-h-screen">
       {/* Page-level structural grid — vertical container boundaries */}
       <div
-        className="pointer-events-none fixed inset-0 z-[1] flex justify-center w-full"
+        className="pointer-events-none fixed inset-0 z-1 flex justify-center w-full"
         aria-hidden="true"
       >
-        <div className="h-full w-[calc(100%-2rem)] sm:w-[calc(100%-4rem)] max-w-7xl border-x border-white/[0.06]" />
+        <div className="h-full w-[calc(100%-2rem)] sm:w-[calc(100%-4rem)] max-w-7xl border-x border-white/6" />
       </div>
 
       <Navbar />

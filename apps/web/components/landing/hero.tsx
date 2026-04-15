@@ -41,7 +41,7 @@ export function Hero() {
 
       {/* Noise texture — film-grain depth above WebGL */}
       <div
-        className="pointer-events-none absolute inset-0 z-[1] bg-repeat"
+        className="pointer-events-none absolute inset-0 z-1 bg-repeat"
         style={{
           backgroundImage: "url('/noise.gif')",
           opacity: 0.03,
