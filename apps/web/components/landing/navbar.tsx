@@ -313,17 +313,17 @@ export function Navbar() {
 
           {/* ── Desktop CTA ── */}
           <LightBeamButton
-            onClick={() => router.push("/auth")}
+            onClick={() => router.push("/auth?type=login")}
             className="hidden shrink-0 px-5 py-2.5 text-sm font-semibold lg:inline-flex"
           >
-            Login / Register
+            Login / Signup
           </LightBeamButton>
         </div>
 
         {/* Full-width navbar border — only when expanded */}
         {!shouldShrink && (
           <div
-            className="w-full border-b border-white/[0.06]"
+            className="w-full border-b border-white/6"
             style={{ pointerEvents: "none" }}
           />
         )}

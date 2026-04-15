@@ -137,7 +137,7 @@ export function Hero() {
               className="flex flex-col items-center gap-4 pt-2 sm:flex-row"
             >
               <LightBeamButton
-                onClick={() => (window.location.href = "/signup")}
+                onClick={() => (window.location.href = "/auth?type=signup")}
               >
                 Get Started Free
                 <ArrowUpRight size={15} />

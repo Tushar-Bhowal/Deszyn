@@ -1,57 +1,85 @@
 "use client";
 
-import React from "react";
-import { AtSignIcon, ChevronLeftIcon, Grid2x2PlusIcon } from "lucide-react";
-import { FloatingPaths } from "./_components/FloatingPaths";
+import React, { Suspense } from "react";
+import {
+  AtSignIcon,
+  ChevronLeftIcon,
+  LockIcon,
+  UserIcon,
+  Brain,
+  Code2,
+  Gauge,
+  Palette,
+} from "lucide-react";
+import { OAuthButtons } from "./_components/OAuthButtons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { OAuthButtons } from "./_components/OAuthButtons";
-import Link from "next/link";
-
-import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
+
+import { TimelineAnimation } from "@/components/ui/timeline-animation";
+import { AuthLeftPanel } from "./_components/AuthLeftPanel";
+
+const AuthSeparator = () => (
+  <div className="flex w-full items-center justify-center">
+    <div className="bg-border h-px w-full" />
+    <span className="text-muted-foreground px-2 text-xs">OR</span>
+    <div className="bg-border h-px w-full" />
+  </div>
+);
+
+// Left panel feature highlights
+const features = [
+  { icon: Brain, label: "AI-powered design generation in seconds" },
+  { icon: Code2, label: "Export clean global.css & production assets" },
+  { icon: Gauge, label: "10× faster than traditional design" },
+  { icon: Palette, label: "Full brand identity — logo, colors & brand name" },
+];
+
+// Suspense fallback
+const AuthSkeleton = () => (
+  <div className="flex min-h-screen items-center justify-center">
+    <div className="animate-pulse space-y-4 sm:w-sm w-full px-4">
+      <div className="h-8 w-48 rounded bg-white/10" />
+      <div className="h-4 w-64 rounded bg-white/6" />
+      <div className="h-10 rounded bg-white/10" />
+      <div className="h-10 rounded bg-white/10" />
+      <div className="h-10 rounded bg-white/10" />
+    </div>
+  </div>
+);
 
 function AuthContent() {
   const searchParams = useSearchParams();
   const type = searchParams.get("type") || "login";
   const isSignUp = type === "signup";
+  const timelineRef = React.useRef<HTMLDivElement>(null);
 
   return (
     <main className="relative md:h-screen md:overflow-hidden lg:grid lg:grid-cols-2">
-      <div className="bg-muted/60 relative hidden h-full flex-col border-r border-white/6 p-10 lg:flex z-10 overflow-hidden">
-        <div className="bg-[radial-gradient(ellipse_at_top_left,rgba(0,85,254,0.15)_0,transparent_70%)] absolute inset-0 z-0" />
-        <div className="from-background absolute inset-0 z-10 bg-linear-to-t to-transparent" />
-        <div className="z-10 flex items-center gap-2">
-          <Image
-            src="/logo.png"
-            alt="Deszyn"
-            width={26}
-            height={26}
-            loading="eager"
-            priority
-            className="rounded-md group-hover:scale-105 transition-transform duration-300 w-auto h-auto"
-          />
-          <p className="text-xl font-semibold text-white">Deszyn</p>
+      <AuthLeftPanel>
+        <div className="w-full max-w-sm space-y-3">
+          {features.map(({ icon: Icon, label }) => (
+            <div
+              key={label}
+              className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm"
+            >
+              <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-600/20 border border-blue-500/20">
+                <Icon className="size-4 text-blue-400" />
+              </div>
+              <span className="text-sm text-white/80">{label}</span>
+            </div>
+          ))}
         </div>
-        <div className="z-10 mt-auto">
-          <blockquote className="space-y-2">
-            <p className="text-xl text-white/90">
-              &ldquo;The code took me 2 days, but design usually takes 3. This
-              platform eliminates the entire design bottleneck for me.&rdquo;
-            </p>
-            <footer className="font-mono text-sm font-semibold text-white/70">
-              ~ Senior Developer
-            </footer>
-          </blockquote>
-        </div>
-        <div className="absolute inset-0">
-          <FloatingPaths position={1} />
-          <FloatingPaths position={-1} />
-        </div>
-      </div>
-      <div className="relative flex min-h-screen flex-col justify-center p-4 z-10">
+      </AuthLeftPanel>
+
+      {/* ── Right panel ── */}
+      <div
+        ref={timelineRef}
+        className="relative flex min-h-screen flex-col justify-center p-4 z-10"
+      >
         <div
           aria-hidden
           className="absolute inset-0 isolate contain-strict -z-10 opacity-60"
@@ -60,26 +88,40 @@ function AuthContent() {
           <div className="bg-[radial-gradient(50%_50%_at_50%_50%,rgba(0,85,254,0.1)_0,rgba(0,85,254,0.02)_80%,transparent_100%)] absolute top-0 right-0 h-320 w-60 [translate:5%_-50%] rounded-full blur-xl" />
           <div className="bg-[radial-gradient(50%_50%_at_50%_50%,rgba(0,85,254,0.1)_0,rgba(0,85,254,0.02)_80%,transparent_100%)] absolute top-0 right-0 h-320 w-60 -translate-y-87.5 rounded-full blur-xl" />
         </div>
-        <Button variant="ghost" className="absolute top-7 left-5" asChild>
+
+        <Button
+          variant="ghost"
+          className="absolute top-7 left-5 border border-transparent text-white/75 hover:border-white/10 hover:bg-black/40 hover:text-white dark:hover:bg-black/40"
+          asChild
+        >
           <Link href="/">
             <ChevronLeftIcon className="size-4 me-2" />
             Home
           </Link>
         </Button>
-        <div className="mx-auto space-y-4 sm:w-sm">
-          <div className="flex items-center gap-2 lg:hidden">
+
+        <div className="mx-auto space-y-4 sm:w-sm w-full">
+          <TimelineAnimation
+            animationNum={0}
+            timelineRef={timelineRef}
+            className="flex items-center gap-2 lg:hidden"
+          >
             <Image
               src="/logo.png"
               alt="Deszyn"
               width={24}
               height={24}
-              loading="eager"
               priority
-              className="rounded-md group-hover:scale-105 transition-transform duration-300 w-auto h-auto"
+              className="rounded-md w-auto h-auto"
             />
             <p className="text-lg font-semibold text-white">Deszyn</p>
-          </div>
-          <div className="flex flex-col space-y-1">
+          </TimelineAnimation>
+
+          <TimelineAnimation
+            animationNum={1}
+            timelineRef={timelineRef}
+            className="flex flex-col space-y-1"
+          >
             <h1 className="font-heading text-2xl font-bold tracking-wide">
               {isSignUp ? "Create an Account" : "Welcome Back"}
             </h1>
@@ -88,95 +130,106 @@ function AuthContent() {
                 ? "Sign up to start designing with AI."
                 : "Log in to your account."}
             </p>
-          </div>
-          <div className="space-y-2">
+          </TimelineAnimation>
+
+          <TimelineAnimation animationNum={2} timelineRef={timelineRef}>
             <OAuthButtons />
-          </div>
+          </TimelineAnimation>
 
-          <AuthSeparator />
+          <TimelineAnimation animationNum={3} timelineRef={timelineRef}>
+            <AuthSeparator />
+          </TimelineAnimation>
 
-          <form className="space-y-4">
-            {isSignUp && (
+          <TimelineAnimation animationNum={4} timelineRef={timelineRef}>
+            <form className="space-y-4">
+              {isSignUp && (
+                <div className="space-y-2">
+                  <Label
+                    className="text-muted-foreground text-xs"
+                    htmlFor="username"
+                  >
+                    Username
+                  </Label>
+                  <div className="relative h-max">
+                    <Input
+                      id="username"
+                      placeholder="johndoe"
+                      className="peer ps-9 border-white/15 focus:border-white/30"
+                      type="text"
+                    />
+                    <div className="text-muted-foreground pointer-events-none absolute inset-y-0 inset-s-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                      <UserIcon className="size-4" aria-hidden="true" />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Email */}
               <div className="space-y-2">
                 <Label
                   className="text-muted-foreground text-xs"
-                  htmlFor="username"
+                  htmlFor="email"
                 >
-                  Username
+                  Email
                 </Label>
                 <div className="relative h-max">
                   <Input
-                    id="username"
-                    placeholder="Username"
-                    className="peer ps-9"
-                    type="text"
+                    id="email"
+                    placeholder="your.email@example.com"
+                    className="peer ps-9 border-white/15 focus:border-white/30"
+                    type="email"
                   />
                   <div className="text-muted-foreground pointer-events-none absolute inset-y-0 inset-s-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
                     <AtSignIcon className="size-4" aria-hidden="true" />
                   </div>
                 </div>
               </div>
-            )}
 
-            <div className="space-y-2">
-              <Label className="text-muted-foreground text-xs" htmlFor="email">
-                Email
-              </Label>
-              <div className="relative h-max">
-                <Input
-                  id="email"
-                  placeholder="your.email@example.com"
-                  className="peer ps-9"
-                  type="email"
-                />
-                <div className="text-muted-foreground pointer-events-none absolute inset-y-0 inset-s-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-                  <AtSignIcon className="size-4" aria-hidden="true" />
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label
-                className="text-muted-foreground text-xs"
-                htmlFor="password"
-              >
-                Password
-              </Label>
-              <div className="relative h-max">
-                <Input
-                  id="password"
-                  placeholder="••••••••"
-                  className="peer ps-9"
-                  type="password"
-                />
-                <div className="text-muted-foreground pointer-events-none absolute inset-y-0 inset-s-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+              {/* Password */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label
+                    className="text-muted-foreground text-xs"
+                    htmlFor="password"
                   >
-                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                  </svg>
+                    Password
+                  </Label>
+                  {!isSignUp && (
+                    <Link
+                      href="/auth/forgot-password"
+                      className="text-xs text-blue-500 hover:text-blue-400 transition-colors"
+                    >
+                      Forgot password?
+                    </Link>
+                  )}
+                </div>
+                <div className="relative h-max">
+                  <Input
+                    id="password"
+                    placeholder="••••••••"
+                    className="peer ps-9 border-white/15 focus:border-white/30"
+                    type="password"
+                  />
+                  <div className="text-muted-foreground pointer-events-none absolute inset-y-0 inset-s-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                    <LockIcon className="size-4" aria-hidden="true" />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <Button
-              type="button"
-              className="w-full rounded border border-white/10 bg-blue-600 font-semibold text-white shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)] transition-all hover:bg-blue-500 hover:shadow-[0_0_60px_-15px_rgba(37,99,235,0.7)]"
-            >
-              <span>{isSignUp ? "Sign Up" : "Log In"}</span>
-            </Button>
-          </form>
+              <Button
+                type="button"
+                className="w-full rounded-lg border border-white/10 bg-blue-600 font-semibold text-white shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)] transition-all hover:bg-blue-500 hover:shadow-[0_0_60px_-15px_rgba(37,99,235,0.7)]"
+              >
+                {isSignUp ? "Sign Up" : "Log In"}
+              </Button>
+            </form>
+          </TimelineAnimation>
 
-          <div className="mt-6 pt-4 text-center text-sm">
+          <TimelineAnimation
+            animationNum={5}
+            timelineRef={timelineRef}
+            className="text-center text-sm"
+          >
             {isSignUp ? (
               <p className="text-muted-foreground">
                 Already have an account?{" "}
@@ -189,7 +242,7 @@ function AuthContent() {
               </p>
             ) : (
               <p className="text-muted-foreground">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link
                   href="?type=signup"
                   className="text-blue-500 hover:text-blue-400 font-semibold underline underline-offset-4 transition-colors"
@@ -198,9 +251,14 @@ function AuthContent() {
                 </Link>
               </p>
             )}
-          </div>
+          </TimelineAnimation>
 
-          <p className="text-muted-foreground mt-8 text-xs text-center border-t border-white/10 pt-4">
+          <TimelineAnimation
+            animationNum={6}
+            timelineRef={timelineRef}
+            as="p"
+            className="text-muted-foreground border-t border-white/10 pt-4 text-left text-xs"
+          >
             By clicking continue, you agree to our{" "}
             <a
               href="#"
@@ -216,7 +274,7 @@ function AuthContent() {
               Privacy Policy
             </a>
             .
-          </p>
+          </TimelineAnimation>
         </div>
       </div>
     </main>
@@ -225,18 +283,8 @@ function AuthContent() {
 
 export default function AuthPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<AuthSkeleton />}>
       <AuthContent />
     </Suspense>
   );
 }
-
-const AuthSeparator = () => {
-  return (
-    <div className="flex w-full items-center justify-center">
-      <div className="bg-border h-px w-full" />
-      <span className="text-muted-foreground px-2 text-xs">OR</span>
-      <div className="bg-border h-px w-full" />
-    </div>
-  );
-};
