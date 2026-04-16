@@ -203,11 +203,11 @@ export function MobileNavigation({
                   <LightBeamButton
                     onClick={() => {
                       onClose();
-                      router.push("/signup");
+                      router.push("/auth?type=login");
                     }}
                     className="flex w-full items-center justify-center gap-2 text-base font-semibold py-4 h-auto"
                   >
-                    Get Started Free →
+                    Login / Signup
                   </LightBeamButton>
                 </motion.div>
               </div>

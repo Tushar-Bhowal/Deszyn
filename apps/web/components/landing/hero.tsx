@@ -78,9 +78,7 @@ export function Hero() {
               className="mx-auto flex w-full max-w-none flex-col items-center justify-center text-center font-display text-5xl font-medium tracking-tight text-white sm:text-6xl lg:text-[4rem] lg:leading-[1.1] xl:text-[4.5rem]"
             >
               {/* Line 1 — explicitly wide */}
-              <span className="block w-full">
-                Describe Your Idea & Get a
-              </span>
+              <span className="block w-full">Describe Your Idea & Get a</span>
 
               {/* Line 2 — explicitly centered flex container */}
               <span className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-3 sm:gap-x-4 pt-2">
@@ -187,7 +185,7 @@ export function Hero() {
               loading="eager"
               src="/hero-finance.avif"
               alt="Deszyn — logo, UI, and brand generated from your idea"
-              className="w-full rounded-3xl object-cover"
+              className="w-full h-auto rounded-3xl object-cover"
             />
           </TimelineAnimation>
         </div>
