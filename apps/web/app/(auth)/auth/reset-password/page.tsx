@@ -1,23 +1,17 @@
-"use client";
+'use client';
 
-import React, { Suspense, useState } from "react";
-import {
-  ChevronLeftIcon,
-  LockIcon,
-  CheckCircleIcon,
-  EyeIcon,
-  EyeOffIcon,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import Image from "next/image";
-import Link from "next/link";
+import { CheckCircleIcon, ChevronLeftIcon, EyeIcon, EyeOffIcon, LockIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { Suspense, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
-import { TimelineAnimation } from "@/components/ui/timeline-animation";
-import { AuthLeftPanel } from "../_components/AuthLeftPanel";
+import { TimelineAnimation } from '@/components/ui/timeline-animation';
+import { AuthLeftPanel } from '../_components/AuthLeftPanel';
 
-// Skeleton 
+// Skeleton
 const ResetSkeleton = () => (
   <div className="flex min-h-screen items-center justify-center">
     <div className="animate-pulse space-y-4 sm:w-sm w-full px-4">
@@ -42,12 +36,11 @@ function getStrength(password: string): {
   if (/[0-9]/.test(password)) score++;
   if (/[^A-Za-z0-9]/.test(password)) score++;
 
-  if (score <= 1) return { score, label: "Weak", color: "bg-red-500" };
-  if (score === 2) return { score, label: "Fair", color: "bg-orange-400" };
-  if (score === 3) return { score, label: "Good", color: "bg-yellow-400" };
-  return { score, label: "Strong", color: "bg-green-500" };
+  if (score <= 1) return { score, label: 'Weak', color: 'bg-red-500' };
+  if (score === 2) return { score, label: 'Fair', color: 'bg-orange-400' };
+  if (score === 3) return { score, label: 'Good', color: 'bg-yellow-400' };
+  return { score, label: 'Strong', color: 'bg-green-500' };
 }
-
 
 function PasswordInput({
   id,
@@ -66,7 +59,7 @@ function PasswordInput({
     <div className="relative h-max">
       <Input
         id={id}
-        type={show ? "text" : "password"}
+        type={show ? 'text' : 'password'}
         placeholder={placeholder}
         className="peer ps-9 pe-9 border-white/15 focus:border-white/30"
         value={value}
@@ -82,25 +75,20 @@ function PasswordInput({
         type="button"
         onClick={() => setShow((p) => !p)}
         className="text-muted-foreground absolute inset-y-0 inset-e-0 flex items-center justify-center pe-3 hover:text-white transition-colors"
-        aria-label={show ? "Hide password" : "Show password"}
+        aria-label={show ? 'Hide password' : 'Show password'}
       >
-        {show ? (
-          <EyeOffIcon className="size-4" />
-        ) : (
-          <EyeIcon className="size-4" />
-        )}
+        {show ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
       </button>
     </div>
   );
 }
 
-
 function ResetPasswordContent() {
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const timelineRef = React.useRef<HTMLDivElement>(null);
 
   const strength = getStrength(password);
@@ -110,7 +98,7 @@ function ResetPasswordContent() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
-    setError("");
+    setError('');
     setLoading(true);
 
     // TODO: wire Better Auth
@@ -130,8 +118,8 @@ function ResetPasswordContent() {
           </div>
           <p className="text-lg font-semibold text-white">Set a new password</p>
           <p className="text-sm text-white/50 leading-relaxed">
-            Choose something strong — at least 8 characters with a mix of
-            letters, numbers, and symbols.
+            Choose something strong — at least 8 characters with a mix of letters, numbers, and
+            symbols.
           </p>
         </div>
       </AuthLeftPanel>
@@ -142,10 +130,7 @@ function ResetPasswordContent() {
         className="relative flex min-h-screen flex-col justify-center p-4 z-10"
       >
         {/* Blue glow — identical to all auth pages */}
-        <div
-          aria-hidden
-          className="absolute inset-0 isolate contain-strict -z-10 opacity-60"
-        >
+        <div aria-hidden className="absolute inset-0 isolate contain-strict -z-10 opacity-60">
           <div className="bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,rgba(0,85,254,0.15)_0,rgba(0,85,254,0.05)_50%,transparent_80%)] absolute top-0 right-0 h-320 w-140 -translate-y-87.5 rounded-full blur-2xl" />
           <div className="bg-[radial-gradient(50%_50%_at_50%_50%,rgba(0,85,254,0.1)_0,rgba(0,85,254,0.02)_80%,transparent_100%)] absolute top-0 right-0 h-320 w-60 [translate:5%_-50%] rounded-full blur-xl" />
           <div className="bg-[radial-gradient(50%_50%_at_50%_50%,rgba(0,85,254,0.1)_0,rgba(0,85,254,0.02)_80%,transparent_100%)] absolute top-0 right-0 h-320 w-60 -translate-y-87.5 rounded-full blur-xl" />
@@ -200,10 +185,7 @@ function ResetPasswordContent() {
               <TimelineAnimation animationNum={2} timelineRef={timelineRef}>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label
-                      className="text-muted-foreground text-xs"
-                      htmlFor="password"
-                    >
+                    <Label className="text-muted-foreground text-xs" htmlFor="password">
                       New password
                     </Label>
                     <PasswordInput
@@ -219,9 +201,7 @@ function ResetPasswordContent() {
                             <div
                               key={i}
                               className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                                i <= strength.score
-                                  ? strength.color
-                                  : "bg-white/10"
+                                i <= strength.score ? strength.color : 'bg-white/10'
                               }`}
                             />
                           ))}
@@ -229,12 +209,12 @@ function ResetPasswordContent() {
                         <p
                           className={`text-xs ${
                             strength.score <= 1
-                              ? "text-red-400"
+                              ? 'text-red-400'
                               : strength.score === 2
-                                ? "text-orange-400"
+                                ? 'text-orange-400'
                                 : strength.score === 3
-                                  ? "text-yellow-400"
-                                  : "text-green-400"
+                                  ? 'text-yellow-400'
+                                  : 'text-green-400'
                           }`}
                         >
                           {strength.label} password
@@ -244,10 +224,7 @@ function ResetPasswordContent() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label
-                      className="text-muted-foreground text-xs"
-                      htmlFor="confirm"
-                    >
+                    <Label className="text-muted-foreground text-xs" htmlFor="confirm">
                       Confirm password
                     </Label>
                     <PasswordInput
@@ -256,16 +233,10 @@ function ResetPasswordContent() {
                       value={confirm}
                       onChange={setConfirm}
                     />
-                    {mismatch && (
-                      <p className="text-xs text-red-400">
-                        Passwords don't match
-                      </p>
-                    )}
+                    {mismatch && <p className="text-xs text-red-400">Passwords don't match</p>}
                   </div>
 
-                  {error && (
-                    <p className="text-center text-xs text-red-400">{error}</p>
-                  )}
+                  {error && <p className="text-center text-xs text-red-400">{error}</p>}
 
                   <Button
                     type="submit"
@@ -278,6 +249,7 @@ function ResetPasswordContent() {
                           className="size-4 animate-spin"
                           viewBox="0 0 24 24"
                           fill="none"
+                          aria-hidden="true"
                         >
                           <circle
                             className="opacity-25"
@@ -296,7 +268,7 @@ function ResetPasswordContent() {
                         Resetting...
                       </span>
                     ) : (
-                      "Reset Password"
+                      'Reset Password'
                     )}
                   </Button>
                 </form>
@@ -312,12 +284,9 @@ function ResetPasswordContent() {
                 <CheckCircleIcon className="size-8 text-green-400" />
               </div>
               <div className="space-y-1">
-                <h1 className="font-heading text-2xl font-bold tracking-wide">
-                  Password reset!
-                </h1>
+                <h1 className="font-heading text-2xl font-bold tracking-wide">Password reset!</h1>
                 <p className="text-muted-foreground text-sm max-w-xs">
-                  Your password has been updated. You can now log in with your
-                  new password.
+                  Your password has been updated. You can now log in with your new password.
                 </p>
               </div>
               <Button

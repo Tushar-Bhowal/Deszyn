@@ -1,12 +1,7 @@
-"use client";
+'use client';
 
-import type React from "react";
-import {
-  motion,
-  useInView,
-  type HTMLMotionProps,
-  type Variants,
-} from "framer-motion";
+import { type HTMLMotionProps, motion, useInView, type Variants } from 'framer-motion';
+import type React from 'react';
 
 const motionComponents = {
   a: motion.a,
@@ -30,16 +25,16 @@ type TimelineAnimationProps = {
   customVariants?: Variants;
   once?: boolean;
   timelineRef: React.RefObject<HTMLElement | null>;
-} & HTMLMotionProps<"div">;
+} & HTMLMotionProps<'div'>;
 
 const defaultSequenceVariants: Variants = {
   hidden: {
-    filter: "blur(18px)",
+    filter: 'blur(18px)',
     opacity: 0,
     y: 32,
   },
   visible: (i: number) => ({
-    filter: "blur(0px)",
+    filter: 'blur(0px)',
     opacity: 1,
     y: 0,
     transition: {
@@ -65,11 +60,11 @@ export function TimelineAnimation({
     once,
   });
 
-  const MotionComponent = motionComponents[as ?? "div"] as React.ElementType;
+  const MotionComponent = motionComponents[as ?? 'div'] as React.ElementType;
 
   return (
     <MotionComponent
-      animate={isInView ? "visible" : "hidden"}
+      animate={isInView ? 'visible' : 'hidden'}
       className={className}
       custom={animationNum}
       initial="hidden"

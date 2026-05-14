@@ -26,16 +26,20 @@ export function MenuToggleIcon({
       viewBox="0 0 32 32"
       strokeLinecap={strokeLinecap}
       strokeLinejoin={strokeLinejoin}
-      className={cn(
-        'transition-transform ease-in-out',
-        open && '-rotate-45',
-        className,
-      )}
+      aria-hidden="true"
+      className={cn('transition-transform ease-in-out', open && '-rotate-45', className)}
       style={{ transitionDuration: `${duration}ms` }}
       {...props}
     >
       <defs>
-        <linearGradient id="menu-icon-gradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="32" y2="0">
+        <linearGradient
+          id="menu-icon-gradient"
+          gradientUnits="userSpaceOnUse"
+          x1="0"
+          y1="0"
+          x2="32"
+          y2="0"
+        >
           <stop offset="0%" stopColor="var(--primary)" />
           <stop offset="50%" stopColor="var(--primary)" stopOpacity="0.9" />
           <stop offset="100%" stopColor="#60a5fa" />
@@ -52,11 +56,11 @@ export function MenuToggleIcon({
         style={{ transitionDuration: `${duration}ms` }}
         d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
       />
-      <path 
+      <path
         stroke="url(#menu-icon-gradient)"
         className="transition-all ease-in-out"
         style={{ transitionDuration: `${duration}ms` }}
-        d="M7 16 27 16" 
+        d="M7 16 27 16"
       />
     </svg>
   );

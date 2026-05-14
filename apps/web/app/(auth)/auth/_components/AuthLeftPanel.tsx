@@ -1,8 +1,8 @@
-import React from "react";
-import Image from "next/image";
+import Image from 'next/image';
+import React from 'react';
 
-import { TimelineAnimation } from "@/components/ui/timeline-animation";
-import { FloatingPaths } from "./FloatingPaths";
+import { TimelineAnimation } from '@/components/ui/timeline-animation';
+import { FloatingPaths } from './FloatingPaths';
 
 export function AuthLeftPanel({ children }: { children?: React.ReactNode }) {
   const timelineRef = React.useRef<HTMLDivElement>(null);
@@ -41,15 +41,11 @@ export function AuthLeftPanel({ children }: { children?: React.ReactNode }) {
         </TimelineAnimation>
       )}
 
-      <TimelineAnimation
-        animationNum={2}
-        timelineRef={timelineRef}
-        className="z-10 mt-auto"
-      >
+      <TimelineAnimation animationNum={2} timelineRef={timelineRef} className="z-10 mt-auto">
         <blockquote className="space-y-2">
           <p className="text-xl text-white/90">
-            &ldquo;The code took me 2 days, but design usually takes 3. This
-            platform eliminates the entire design bottleneck for me.&rdquo;
+            &ldquo;The code took me 2 days, but design usually takes 3. This platform eliminates the
+            entire design bottleneck for me.&rdquo;
           </p>
           <footer className="font-mono text-sm font-semibold text-white/70">
             ~ Senior Developer

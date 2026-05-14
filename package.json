@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "npm@10.0.0",
+  "engines": {
+    "node": ">=22"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -10,11 +13,16 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
+    "start": "turbo start",
     "check-types": "turbo check-types",
-    "lint": "turbo lint"
+    "lint": "turbo lint",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "check": "biome check --write ."
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.15",
     "dotenv-cli": "^11.0.0",
-    "turbo": "^2.9.6"
+    "turbo": "^2.9.12"
   }
 }

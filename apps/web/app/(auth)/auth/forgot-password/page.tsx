@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import React, { Suspense, useState } from "react";
-import { AtSignIcon, ChevronLeftIcon, MailCheckIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import Image from "next/image";
-import Link from "next/link";
+import { AtSignIcon, ChevronLeftIcon, MailCheckIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { Suspense, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
-import { TimelineAnimation } from "@/components/ui/timeline-animation";
-import { AuthLeftPanel } from "../_components/AuthLeftPanel";
+import { TimelineAnimation } from '@/components/ui/timeline-animation';
+import { AuthLeftPanel } from '../_components/AuthLeftPanel';
 
 // ─── Skeleton ────────────────────────────────────────────────────────────────
 const ForgotSkeleton = () => (
@@ -25,7 +25,7 @@ const ForgotSkeleton = () => (
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 function ForgotPasswordContent() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const timelineRef = React.useRef<HTMLDivElement>(null);
@@ -49,8 +49,7 @@ function ForgotPasswordContent() {
           </div>
           <p className="text-lg font-semibold text-white">Password recovery</p>
           <p className="text-sm text-white/50 leading-relaxed">
-            We&apos;ll send a secure link to your inbox so you can reset your
-            password safely.
+            We&apos;ll send a secure link to your inbox so you can reset your password safely.
           </p>
         </div>
       </AuthLeftPanel>
@@ -61,10 +60,7 @@ function ForgotPasswordContent() {
         className="relative flex min-h-screen flex-col justify-center p-4 z-10"
       >
         {/* Blue glow background — identical to auth page */}
-        <div
-          aria-hidden
-          className="absolute inset-0 isolate contain-strict -z-10 opacity-60"
-        >
+        <div aria-hidden className="absolute inset-0 isolate contain-strict -z-10 opacity-60">
           <div className="bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,rgba(0,85,254,0.15)_0,rgba(0,85,254,0.05)_50%,transparent_80%)] absolute top-0 right-0 h-320 w-140 -translate-y-87.5 rounded-full blur-2xl" />
           <div className="bg-[radial-gradient(50%_50%_at_50%_50%,rgba(0,85,254,0.1)_0,rgba(0,85,254,0.02)_80%,transparent_100%)] absolute top-0 right-0 h-320 w-60 [translate:5%_-50%] rounded-full blur-xl" />
           <div className="bg-[radial-gradient(50%_50%_at_50%_50%,rgba(0,85,254,0.1)_0,rgba(0,85,254,0.02)_80%,transparent_100%)] absolute top-0 right-0 h-320 w-60 -translate-y-87.5 rounded-full blur-xl" />
@@ -117,10 +113,7 @@ function ForgotPasswordContent() {
               <TimelineAnimation animationNum={2} timelineRef={timelineRef}>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label
-                      className="text-muted-foreground text-xs"
-                      htmlFor="email"
-                    >
+                    <Label className="text-muted-foreground text-xs" htmlFor="email">
                       Email address
                     </Label>
                     <div className="relative h-max">
@@ -150,6 +143,7 @@ function ForgotPasswordContent() {
                           className="size-4 animate-spin"
                           viewBox="0 0 24 24"
                           fill="none"
+                          aria-hidden="true"
                         >
                           <circle
                             className="opacity-25"
@@ -168,7 +162,7 @@ function ForgotPasswordContent() {
                         Sending...
                       </span>
                     ) : (
-                      "Send Reset Link"
+                      'Send Reset Link'
                     )}
                   </Button>
                 </form>
@@ -180,7 +174,7 @@ function ForgotPasswordContent() {
                 as="p"
                 className="text-center text-sm text-muted-foreground"
               >
-                Remembered it?{" "}
+                Remembered it?{' '}
                 <Link
                   href="/auth"
                   className="text-blue-500 hover:text-blue-400 font-semibold underline underline-offset-4 transition-colors"
@@ -199,13 +193,10 @@ function ForgotPasswordContent() {
                 <MailCheckIcon className="size-8 text-blue-400" />
               </div>
               <div className="space-y-1">
-                <h1 className="font-heading text-2xl font-bold tracking-wide">
-                  Check your inbox
-                </h1>
+                <h1 className="font-heading text-2xl font-bold tracking-wide">Check your inbox</h1>
                 <p className="text-muted-foreground text-sm max-w-xs">
-                  We sent a reset link to{" "}
-                  <span className="text-white font-medium">{email}</span>. It
-                  expires in 15 minutes.
+                  We sent a reset link to <span className="text-white font-medium">{email}</span>.
+                  It expires in 15 minutes.
                 </p>
               </div>
               <Button
@@ -216,8 +207,7 @@ function ForgotPasswordContent() {
                 Wrong email? Try again
               </Button>
               <p className="text-muted-foreground text-xs border-t border-white/10 pt-4 w-full text-left">
-                Didn&apos;t receive it? Check your spam folder or wait a minute
-                before resending.
+                Didn&apos;t receive it? Check your spam folder or wait a minute before resending.
               </p>
             </TimelineAnimation>
           )}

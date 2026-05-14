@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from 'react';
 
 /**
  * ProceduralGroundBackground
@@ -16,9 +16,9 @@ const ProceduralGroundBackground: React.FC = () => {
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    const gl = canvas.getContext("webgl");
+    const gl = canvas.getContext('webgl');
     if (!gl) {
-      console.error("WebGL not supported");
+      console.error('WebGL not supported');
       return;
     }
 
@@ -77,17 +77,13 @@ const ProceduralGroundBackground: React.FC = () => {
       }
     `;
 
-    const createShader = (
-      gl: WebGLRenderingContext,
-      type: number,
-      source: string,
-    ) => {
+    const createShader = (gl: WebGLRenderingContext, type: number, source: string) => {
       const shader = gl.createShader(type);
       if (!shader) return null;
       gl.shaderSource(shader, source);
       gl.compileShader(shader);
       if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error("Shader compile error:", gl.getShaderInfoLog(shader));
+        console.error('Shader compile error:', gl.getShaderInfoLog(shader));
         gl.deleteShader(shader);
         return null;
       }
@@ -107,10 +103,11 @@ const ProceduralGroundBackground: React.FC = () => {
     gl.linkProgram(program);
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      console.error("Program link error:", gl.getProgramInfoLog(program));
+      console.error('Program link error:', gl.getProgramInfoLog(program));
       return;
     }
 
+    // biome-ignore lint/correctness/useHookAtTopLevel: gl.useProgram is a WebGL API, not a React hook
     gl.useProgram(program);
 
     const buffer = gl.createBuffer();
@@ -121,12 +118,12 @@ const ProceduralGroundBackground: React.FC = () => {
       gl.STATIC_DRAW,
     );
 
-    const posAttrib = gl.getAttribLocation(program, "position");
+    const posAttrib = gl.getAttribLocation(program, 'position');
     gl.enableVertexAttribArray(posAttrib);
     gl.vertexAttribPointer(posAttrib, 2, gl.FLOAT, false, 0, 0);
 
-    const timeLoc = gl.getUniformLocation(program, "u_time");
-    const resLoc = gl.getUniformLocation(program, "u_resolution");
+    const timeLoc = gl.getUniformLocation(program, 'u_time');
+    const resLoc = gl.getUniformLocation(program, 'u_resolution');
 
     const resize = () => {
       const rect = container.getBoundingClientRect();
@@ -144,11 +141,11 @@ const ProceduralGroundBackground: React.FC = () => {
     };
 
     resize();
-    window.addEventListener("resize", resize);
+    window.addEventListener('resize', resize);
     animationFrameId = requestAnimationFrame(render);
 
     return () => {
-      window.removeEventListener("resize", resize);
+      window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -159,11 +156,7 @@ const ProceduralGroundBackground: React.FC = () => {
       className="absolute inset-0 w-full h-full overflow-hidden bg-zinc-950"
       style={{ zIndex: 0 }}
     >
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full"
-        style={{ display: "block" }}
-      />
+      <canvas ref={canvasRef} className="w-full h-full" style={{ display: 'block' }} />
     </div>
   );
 };

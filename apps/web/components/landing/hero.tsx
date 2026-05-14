@@ -1,24 +1,23 @@
-"use client";
+'use client';
 
-import React from "react";
-import type { Variants } from "framer-motion";
-import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
-import Image from "next/image";
-
-import { TimelineAnimation } from "@/components/ui/timeline-animation";
-import { LightBeamButton } from "@/components/ui/light-beam-button";
-import RotatingText from "@/components/ui/rotating-text";
-import HeroBackground from "./hero-background";
+import type { Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
+import Image from 'next/image';
+import React from 'react';
+import { LightBeamButton } from '@/components/ui/light-beam-button';
+import RotatingText from '@/components/ui/rotating-text';
+import { TimelineAnimation } from '@/components/ui/timeline-animation';
+import HeroBackground from './hero-background';
 
 const heroCopyVariants: Variants = {
   hidden: {
-    filter: "blur(18px)",
+    filter: 'blur(18px)',
     opacity: 0,
     y: 40,
   },
   visible: (i: number) => ({
-    filter: "blur(0px)",
+    filter: 'blur(0px)',
     opacity: 1,
     y: 0,
     transition: {
@@ -33,10 +32,7 @@ export function Hero() {
   const timelineRef = React.useRef<HTMLElement>(null);
 
   return (
-    <section
-      ref={timelineRef}
-      className="relative min-h-screen overflow-hidden"
-    >
+    <section ref={timelineRef} className="relative min-h-screen overflow-hidden">
       <HeroBackground />
 
       {/* Noise texture — film-grain depth above WebGL */}
@@ -85,29 +81,24 @@ export function Hero() {
                 <span>Full UI —</span>
 
                 <RotatingText
-                  texts={[
-                    "Instantly.",
-                    "in Seconds.",
-                    "no Designers.",
-                    "just Ship.",
-                  ]}
+                  texts={['Instantly.', 'in Seconds.', 'no Designers.', 'just Ship.']}
                   splitBy="words"
                   staggerFrom="last"
                   staggerDuration={0.03}
-                  initial={{ y: "110%", opacity: 0 }}
+                  initial={{ y: '110%', opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: "-110%", opacity: 0 }}
-                  transition={{ type: "spring", damping: 26, stiffness: 340 }}
+                  exit={{ y: '-110%', opacity: 0 }}
+                  transition={{ type: 'spring', damping: 26, stiffness: 340 }}
                   rotationInterval={2400}
                   mainClassName={[
-                    "px-4 py-1.5 sm:px-5 sm:py-1.5 rounded-xl overflow-hidden",
-                    "text-white justify-center",
-                  ].join(" ")}
+                    'px-4 py-1.5 sm:px-5 sm:py-1.5 rounded-xl overflow-hidden',
+                    'text-white justify-center',
+                  ].join(' ')}
                   style={{
                     background:
-                      "linear-gradient(180deg, rgb(18, 88, 236) 0%, rgb(0, 70, 220) 100%)",
+                      'linear-gradient(180deg, rgb(18, 88, 236) 0%, rgb(0, 70, 220) 100%)',
                     boxShadow:
-                      "0 4px 24px rgba(0,70,220,0.35), inset 0 1px 0 rgba(255,255,255,0.12)",
+                      '0 4px 24px rgba(0,70,220,0.35), inset 0 1px 0 rgba(255,255,255,0.12)',
                   }}
                   splitLevelClassName="overflow-hidden pb-1"
                 />
@@ -122,9 +113,8 @@ export function Hero() {
               timelineRef={timelineRef}
               className="max-w-3xl text-pretty px-2 text-lg leading-8 text-white/70 sm:text-xl"
             >
-              Paste any URL or describe your product in plain English. Deszyn
-              generates your logo, brand name, and full UI — ready to ship. No
-              designer. No Figma.
+              Paste any URL or describe your product in plain English. Deszyn generates your logo,
+              brand name, and full UI — ready to ship. No designer. No Figma.
             </TimelineAnimation>
 
             {/* CTA */}
@@ -134,9 +124,7 @@ export function Hero() {
               timelineRef={timelineRef}
               className="flex flex-col items-center gap-4 pt-2 sm:flex-row"
             >
-              <LightBeamButton
-                onClick={() => (window.location.href = "/auth?type=signup")}
-              >
+              <LightBeamButton onClick={() => (window.location.href = '/auth?type=signup')}>
                 Get Started Free
                 <ArrowUpRight size={15} />
               </LightBeamButton>
@@ -145,15 +133,13 @@ export function Hero() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() =>
-                  document
-                    .getElementById("how-it-works")
-                    ?.scrollIntoView({ behavior: "smooth" })
+                  document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })
                 }
                 className="inline-flex items-center justify-center rounded-xl px-7 py-3.5 text-sm font-semibold text-white/80 transition-colors duration-300 hover:text-white"
                 style={{
-                  border: "1px solid rgba(255,255,255,0.12)",
+                  border: '1px solid rgba(255,255,255,0.12)',
                   background:
-                    "linear-gradient(180deg, rgba(13,13,18,0.98) 0%, rgba(8,8,12,0.98) 100%)",
+                    'linear-gradient(180deg, rgba(13,13,18,0.98) 0%, rgba(8,8,12,0.98) 100%)',
                 }}
               >
                 How It Works

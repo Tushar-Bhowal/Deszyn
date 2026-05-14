@@ -1,26 +1,25 @@
-"use client";
+'use client';
 
-import React, { Suspense } from "react";
 import {
   AtSignIcon,
-  ChevronLeftIcon,
-  LockIcon,
-  UserIcon,
   Brain,
+  ChevronLeftIcon,
   Code2,
   Gauge,
+  LockIcon,
   Palette,
-} from "lucide-react";
-import { OAuthButtons } from "./_components/OAuthButtons";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useSearchParams } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
-
-import { TimelineAnimation } from "@/components/ui/timeline-animation";
-import { AuthLeftPanel } from "./_components/AuthLeftPanel";
+  UserIcon,
+} from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import React, { Suspense } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { TimelineAnimation } from '@/components/ui/timeline-animation';
+import { AuthLeftPanel } from './_components/AuthLeftPanel';
+import { OAuthButtons } from './_components/OAuthButtons';
 
 const AuthSeparator = () => (
   <div className="flex w-full items-center justify-center">
@@ -32,10 +31,10 @@ const AuthSeparator = () => (
 
 // Left panel feature highlights
 const features = [
-  { icon: Brain, label: "AI-powered design generation in seconds" },
-  { icon: Code2, label: "Export clean global.css & production assets" },
-  { icon: Gauge, label: "10× faster than traditional design" },
-  { icon: Palette, label: "Full brand identity — logo, colors & brand name" },
+  { icon: Brain, label: 'AI-powered design generation in seconds' },
+  { icon: Code2, label: 'Export clean global.css & production assets' },
+  { icon: Gauge, label: '10× faster than traditional design' },
+  { icon: Palette, label: 'Full brand identity — logo, colors & brand name' },
 ];
 
 // Suspense fallback
@@ -53,8 +52,8 @@ const AuthSkeleton = () => (
 
 function AuthContent() {
   const searchParams = useSearchParams();
-  const type = searchParams.get("type") || "login";
-  const isSignUp = type === "signup";
+  const type = searchParams.get('type') || 'login';
+  const isSignUp = type === 'signup';
   const timelineRef = React.useRef<HTMLDivElement>(null);
 
   return (
@@ -80,10 +79,7 @@ function AuthContent() {
         ref={timelineRef}
         className="relative flex min-h-screen flex-col justify-center p-4 z-10"
       >
-        <div
-          aria-hidden
-          className="absolute inset-0 isolate contain-strict -z-10 opacity-60"
-        >
+        <div aria-hidden className="absolute inset-0 isolate contain-strict -z-10 opacity-60">
           <div className="bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,rgba(0,85,254,0.15)_0,rgba(0,85,254,0.05)_50%,transparent_80%)] absolute top-0 right-0 h-320 w-140 -translate-y-87.5 rounded-full blur-2xl" />
           <div className="bg-[radial-gradient(50%_50%_at_50%_50%,rgba(0,85,254,0.1)_0,rgba(0,85,254,0.02)_80%,transparent_100%)] absolute top-0 right-0 h-320 w-60 [translate:5%_-50%] rounded-full blur-xl" />
           <div className="bg-[radial-gradient(50%_50%_at_50%_50%,rgba(0,85,254,0.1)_0,rgba(0,85,254,0.02)_80%,transparent_100%)] absolute top-0 right-0 h-320 w-60 -translate-y-87.5 rounded-full blur-xl" />
@@ -123,12 +119,10 @@ function AuthContent() {
             className="flex flex-col space-y-1"
           >
             <h1 className="font-heading text-2xl font-bold tracking-wide">
-              {isSignUp ? "Create an Account" : "Welcome Back"}
+              {isSignUp ? 'Create an Account' : 'Welcome Back'}
             </h1>
             <p className="text-muted-foreground text-sm">
-              {isSignUp
-                ? "Sign up to start designing with AI."
-                : "Log in to your account."}
+              {isSignUp ? 'Sign up to start designing with AI.' : 'Log in to your account.'}
             </p>
           </TimelineAnimation>
 
@@ -144,10 +138,7 @@ function AuthContent() {
             <form className="space-y-4">
               {isSignUp && (
                 <div className="space-y-2">
-                  <Label
-                    className="text-muted-foreground text-xs"
-                    htmlFor="username"
-                  >
+                  <Label className="text-muted-foreground text-xs" htmlFor="username">
                     Username
                   </Label>
                   <div className="relative h-max">
@@ -166,10 +157,7 @@ function AuthContent() {
 
               {/* Email */}
               <div className="space-y-2">
-                <Label
-                  className="text-muted-foreground text-xs"
-                  htmlFor="email"
-                >
+                <Label className="text-muted-foreground text-xs" htmlFor="email">
                   Email
                 </Label>
                 <div className="relative h-max">
@@ -188,10 +176,7 @@ function AuthContent() {
               {/* Password */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label
-                    className="text-muted-foreground text-xs"
-                    htmlFor="password"
-                  >
+                  <Label className="text-muted-foreground text-xs" htmlFor="password">
                     Password
                   </Label>
                   {!isSignUp && (
@@ -220,7 +205,7 @@ function AuthContent() {
                 type="button"
                 className="w-full rounded-lg border border-white/10 bg-blue-600 font-semibold text-white shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)] transition-all hover:bg-blue-500 hover:shadow-[0_0_60px_-15px_rgba(37,99,235,0.7)]"
               >
-                {isSignUp ? "Sign Up" : "Log In"}
+                {isSignUp ? 'Sign Up' : 'Log In'}
               </Button>
             </form>
           </TimelineAnimation>
@@ -232,7 +217,7 @@ function AuthContent() {
           >
             {isSignUp ? (
               <p className="text-muted-foreground">
-                Already have an account?{" "}
+                Already have an account?{' '}
                 <Link
                   href="?type=login"
                   className="text-blue-500 hover:text-blue-400 font-semibold underline underline-offset-4 transition-colors"
@@ -242,7 +227,7 @@ function AuthContent() {
               </p>
             ) : (
               <p className="text-muted-foreground">
-                Don&apos;t have an account?{" "}
+                Don&apos;t have an account?{' '}
                 <Link
                   href="?type=signup"
                   className="text-blue-500 hover:text-blue-400 font-semibold underline underline-offset-4 transition-colors"
@@ -259,20 +244,14 @@ function AuthContent() {
             as="p"
             className="text-muted-foreground border-t border-white/10 pt-4 text-left text-xs"
           >
-            By clicking continue, you agree to our{" "}
-            <a
-              href="#"
-              className="hover:text-primary underline underline-offset-4"
-            >
+            By clicking continue, you agree to our{' '}
+            <button type="button" className="hover:text-primary underline underline-offset-4">
               Terms of Service
-            </a>{" "}
-            and{" "}
-            <a
-              href="#"
-              className="hover:text-primary underline underline-offset-4"
-            >
+            </button>{' '}
+            and{' '}
+            <button type="button" className="hover:text-primary underline underline-offset-4">
               Privacy Policy
-            </a>
+            </button>
             .
           </TimelineAnimation>
         </div>
