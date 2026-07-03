@@ -279,4 +279,12 @@
   .btn-cta-primary:active {
     filter: brightness(0.97);
   }
+
+  .bg-cta-primary {
+    background: linear-gradient(
+      180deg,
+      var(--cta-primary-background-hover) 0%,
+      var(--cta-primary-background) 100%
+    );
+  }
 }
