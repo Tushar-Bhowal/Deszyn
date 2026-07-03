@@ -1,5 +1,5 @@
+import { LayoutDashboardIcon, SparklesIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
-import { LayoutDashboardIcon } from 'lucide-react';
 
 export type SidebarNavItem = {
   title: string;
@@ -21,7 +21,11 @@ export const navGroups: SidebarNavGroup[] = [
         title: 'Dashboard',
         path: '/dashboard',
         icon: <LayoutDashboardIcon />,
-        isActive: true,
+      },
+      {
+        title: 'Brand Studio',
+        path: '/project/new',
+        icon: <SparklesIcon />,
       },
     ],
   },

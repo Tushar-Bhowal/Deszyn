@@ -1,6 +1,11 @@
 'use client';
 
+import { SettingsIcon } from 'lucide-react';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { AppSearch } from '@/components/app-search';
+import { navGroups } from '@/components/app-shared';
+import { CustomTrigger } from '@/components/custom-trigger';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,21 +20,26 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from '@/components/ui/sidebar';
-import { AppSearch } from '@/components/app-search';
-import { navGroups } from '@/components/app-shared';
-import { CustomTrigger } from '@/components/custom-trigger';
-import { SettingsIcon } from 'lucide-react';
 
 const user = {
   name: 'Tushar Bhowal',
   email: 'itportal6@gmail.com',
 };
 
-export function AppSidebar() {
+export function AppSidebar({
+  collapsible = 'icon',
+  headerTrigger = true,
+}: {
+  collapsible?: 'offcanvas' | 'icon' | 'none';
+  headerTrigger?: boolean;
+}) {
+  const pathname = usePathname();
+  const activeSection = pathname.split('/')[1] ?? '';
+
   return (
     <Sidebar
       className="*:data-[slot=sidebar-inner]:bg-background"
-      collapsible="icon"
+      collapsible={collapsible}
       variant="sidebar"
     >
       <SidebarHeader className="h-(--app-header-height,3rem) flex-row items-center justify-between">
@@ -53,9 +63,11 @@ export function AppSidebar() {
             </span>
           </a>
         </Button>
-        <div className="group-data-[collapsible=icon]:hidden">
-          <CustomTrigger place="sidebar" />
-        </div>
+        {headerTrigger && (
+          <div className="group-data-[collapsible=icon]:hidden">
+            <CustomTrigger place="sidebar" />
+          </div>
+        )}
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -71,7 +83,11 @@ export function AppSidebar() {
             <SidebarMenu>
               {group.items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={item.isActive} tooltip={item.title}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={!!item.path && item.path.split('/')[1] === activeSection}
+                    tooltip={item.title}
+                  >
                     <a href={item.path}>
                       {item.icon}
                       <span>{item.title}</span>
