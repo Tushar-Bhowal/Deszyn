@@ -1,5 +1,15 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono, Plus_Jakarta_Sans, Source_Serif_4 } from 'next/font/google';
+import {
+  Geist,
+  Geist_Mono,
+  Instrument_Serif,
+  Inter,
+  Playfair_Display,
+  Plus_Jakarta_Sans,
+  Sora,
+  Source_Serif_4,
+  Space_Grotesk,
+} from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
@@ -33,6 +43,26 @@ const sourceSerif = Source_Serif_4({
   variable: '--font-source-serif',
   subsets: ['latin'],
   weight: ['400', '600', '700'],
+  display: 'swap',
+});
+
+// Extra families offered in the brand style editor.
+const spaceGrotesk = Space_Grotesk({
+  variable: '--font-space-grotesk',
+  subsets: ['latin'],
+  display: 'swap',
+});
+const sora = Sora({ variable: '--font-sora', subsets: ['latin'], display: 'swap' });
+const inter = Inter({ variable: '--font-inter', subsets: ['latin'], display: 'swap' });
+const playfair = Playfair_Display({
+  variable: '--font-playfair',
+  subsets: ['latin'],
+  display: 'swap',
+});
+const instrumentSerif = Instrument_Serif({
+  variable: '--font-instrument',
+  subsets: ['latin'],
+  weight: '400',
   display: 'swap',
 });
 
@@ -117,6 +147,11 @@ export default function RootLayout({
           ${geistMono.variable}
           ${plusJakartaSans.variable}
           ${sourceSerif.variable}
+          ${spaceGrotesk.variable}
+          ${sora.variable}
+          ${inter.variable}
+          ${playfair.variable}
+          ${instrumentSerif.variable}
           font-sans
           antialiased
           bg-background
