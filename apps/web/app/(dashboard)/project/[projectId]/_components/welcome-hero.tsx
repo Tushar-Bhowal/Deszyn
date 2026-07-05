@@ -35,15 +35,15 @@ function CyclingWord() {
   }
 
   return (
-    <span className="relative inline-flex min-w-[5em] justify-center">
-      <AnimatePresence mode="wait" initial={false}>
+    <span className="relative inline-block text-[#6f9bff]">
+      <AnimatePresence mode="popLayout" initial={false}>
         <motion.span
           key={WORDS[index]}
           initial={{ y: 8, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -8, opacity: 0 }}
           transition={{ duration: 0.14, ease: 'easeOut' }}
-          className="text-[#6f9bff]"
+          className="inline-block"
         >
           {WORDS[index]}
         </motion.span>
