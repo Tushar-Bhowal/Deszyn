@@ -1,8 +1,10 @@
 import type {
   BrandColor,
+  Creativity,
   FontPairing,
   LogoConcept,
   NameCandidate,
+  NameTone,
   PaletteOption,
 } from '@/lib/contracts';
 
@@ -90,15 +92,41 @@ const MOCK_NAMES: NameCandidate[] = [
   },
 ];
 
-export function mockNames(): NameCandidate[] {
-  return MOCK_NAMES;
+// Steer how abstract results feel, and pull a saved favourite's tone to the front (adaptive learning).
+const TONE_ORDER: Record<Creativity, NameTone[]> = {
+  safe: ['serious', 'techy', 'elegant', 'bold', 'playful'],
+  balanced: ['techy', 'bold', 'elegant', 'serious', 'playful'],
+  bold: ['playful', 'bold', 'elegant', 'techy', 'serious'],
+};
+
+export function mockNames(
+  creativity: Creativity = 'balanced',
+  biasTone?: NameTone,
+): NameCandidate[] {
+  const order = TONE_ORDER[creativity];
+  const sorted = [...MOCK_NAMES].sort((a, b) => order.indexOf(a.tone) - order.indexOf(b.tone));
+  if (biasTone) {
+    sorted.sort((a, b) => Number(b.tone === biasTone) - Number(a.tone === biasTone));
+  }
+  return sorted;
 }
 
-export function namesIntro(prompt: string): string {
+const CREATIVITY_PHRASE: Record<Creativity, string> = {
+  safe: 'kept close to what you described',
+  balanced: 'a balanced mix of familiar and inventive',
+  bold: 'leaning bold and abstract — more ownable, less literal',
+};
+
+export function namesIntro(
+  prompt: string,
+  creativity: Creativity = 'balanced',
+  biasTone?: NameTone,
+): string {
   const subject = prompt.trim().replace(/[.!?]+$/, '');
   const label = subject.length > 0 && subject.length <= 60 ? subject : 'your product';
+  const bias = biasTone ? ` I leaned toward the ${biasTone} feel you saved before.` : '';
   return (
-    `Here are five brandable directions for ${label}, each with a different tone. ` +
+    `Here are five brandable directions for ${label} — ${CREATIVITY_PHRASE[creativity]}.${bias} ` +
     `I checked basic trademark risk and domain availability for every option — pick the one ` +
     `that feels right and I'll save it to your brand kit.`
   );
@@ -107,8 +135,25 @@ export function namesIntro(prompt: string): string {
 const esc = (s: string) =>
   s.replace(/[<>&]/g, (c) => (c === '<' ? '&lt;' : c === '>' ? '&gt;' : '&amp;'));
 
+let measureCanvas: HTMLCanvasElement | null = null;
+/** Measured text width so a wordmark's viewBox fits the name at any length (no clipping). */
+function textWidth(text: string, cssFont: string, fallbackPerChar: number): number {
+  if (typeof document === 'undefined') return text.length * fallbackPerChar;
+  measureCanvas ??= document.createElement('canvas');
+  const ctx = measureCanvas.getContext('2d');
+  if (!ctx) return text.length * fallbackPerChar;
+  ctx.font = cssFont;
+  return ctx.measureText(text).width;
+}
+
 function wordmark(name: string): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 96" width="340" height="96"><text x="20" y="62" font-family="Plus Jakarta Sans, ui-sans-serif, sans-serif" font-size="46" font-weight="700" fill="#4f7bff">${esc(name)}</text></svg>`;
+  const size = 46;
+  const padX = 28;
+  const w = Math.ceil(
+    textWidth(name, `700 ${size}px "Plus Jakarta Sans", ui-sans-serif, sans-serif`, size * 0.62) +
+      padX * 2,
+  );
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} 96" width="${w}" height="96"><text x="${w / 2}" y="62" text-anchor="middle" font-family="Plus Jakarta Sans, ui-sans-serif, sans-serif" font-size="${size}" font-weight="700" fill="#4f7bff">${esc(name)}</text></svg>`;
 }
 
 function monogram(name: string): string {
@@ -116,8 +161,9 @@ function monogram(name: string): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120"><rect x="8" y="8" width="104" height="104" rx="26" fill="#4f7bff"/><text x="60" y="83" text-anchor="middle" font-family="Plus Jakarta Sans, ui-sans-serif, sans-serif" font-size="62" font-weight="800" fill="#ffffff">${letter}</text></svg>`;
 }
 
-function abstractMark(name: string): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 120" width="340" height="120"><circle cx="58" cy="60" r="30" fill="#4f7bff"/><circle cx="86" cy="60" r="30" fill="#9cbaff" opacity="0.8"/><text x="140" y="73" font-family="Plus Jakarta Sans, ui-sans-serif, sans-serif" font-size="40" font-weight="700" fill="#e8ebf2">${esc(name)}</text></svg>`;
+/** A true standalone abstract mark — a symbol only, no wordmark text. */
+function abstractMark(): string {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120"><circle cx="46" cy="60" r="32" fill="#4f7bff"/><circle cx="74" cy="60" r="32" fill="#9cbaff" opacity="0.82"/></svg>`;
 }
 
 export function mockLogos(name: string): LogoConcept[] {
@@ -125,7 +171,7 @@ export function mockLogos(name: string): LogoConcept[] {
   return [
     { id: 'wordmark', style: 'Wordmark', svg: wordmark(safe) },
     { id: 'monogram', style: 'Monogram', svg: monogram(safe) },
-    { id: 'abstract', style: 'Abstract mark', svg: abstractMark(safe) },
+    { id: 'abstract', style: 'Abstract mark', svg: abstractMark() },
   ];
 }
 

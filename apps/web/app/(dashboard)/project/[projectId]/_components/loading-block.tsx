@@ -59,7 +59,7 @@ function SystemSkeleton() {
 export function LoadingBlock({ status }: { status: WorkStatus }) {
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex h-7 items-center">
+      <div className="flex h-7 items-center" role="status" aria-live="polite">
         <WorkingStatus status={status} />
       </div>
       {status === 'generating_names' && <NameSkeletons />}

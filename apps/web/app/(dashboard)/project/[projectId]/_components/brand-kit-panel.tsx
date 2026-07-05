@@ -25,7 +25,7 @@ function IconButton({
           type="button"
           aria-label={label}
           onClick={onClick}
-          className="grid size-6 place-items-center rounded-md text-neutral-500 transition-colors hover:bg-white/5 hover:text-neutral-200"
+          className="relative grid size-6 place-items-center rounded-md text-neutral-500 transition-colors after:absolute after:top-1/2 after:left-1/2 after:size-8 after:-translate-x-1/2 after:-translate-y-1/2 hover:bg-white/5 hover:text-neutral-200"
         >
           {children}
         </button>
@@ -38,8 +38,16 @@ function IconButton({
 function SectionLabel({ children, actions }: { children: string; actions?: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-[0.68rem] text-neutral-500 uppercase tracking-wide">{children}</span>
-      {actions && <div className="flex items-center gap-0.5">{actions}</div>}
+      <span className="text-[0.68rem] text-neutral-400 uppercase tracking-wide">{children}</span>
+      {actions && <div className="flex items-center gap-2">{actions}</div>}
+    </div>
+  );
+}
+
+function Ghost({ label }: { label: string }) {
+  return (
+    <div className="rounded-xl border border-white/10 border-dashed bg-white/[0.01] px-3 py-5 text-center text-xs text-neutral-500">
+      {label}
     </div>
   );
 }
@@ -152,78 +160,87 @@ export function BrandKitContent() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="font-display text-sm font-semibold text-neutral-200">Brand kit</h2>
+        <h2 className="font-display text-sm font-medium text-neutral-200">Brand kit</h2>
         <p className="mt-0.5 text-xs text-neutral-500">Everything here is editable</p>
       </div>
 
       <Stepper steps={steps} activeIndex={activeIndex} />
 
-      {brandKit.name && (
-        <div className="flex flex-col gap-1.5">
-          <SectionLabel
-            actions={
-              !editingName && (
-                <>
-                  <IconButton label="Rename" onClick={startEditName}>
-                    <Pencil className="size-3.5" />
-                  </IconButton>
-                  <IconButton label="Remove name" onClick={clearName}>
-                    <Trash2 className="size-3.5" />
-                  </IconButton>
-                </>
-              )
-            }
+      <div className="flex flex-col gap-1.5">
+        <SectionLabel
+          actions={
+            brandKit.name &&
+            !editingName && (
+              <>
+                <IconButton label="Rename" onClick={startEditName}>
+                  <Pencil className="size-3.5" />
+                </IconButton>
+                <IconButton label="Remove name" onClick={clearName}>
+                  <Trash2 className="size-3.5" />
+                </IconButton>
+              </>
+            )
+          }
+        >
+          Name
+        </SectionLabel>
+        {!brandKit.name ? (
+          <Ghost label="Not yet named" />
+        ) : editingName ? (
+          <div className="flex items-center gap-2">
+            <input
+              value={nameDraft}
+              // biome-ignore lint/a11y/noAutofocus: focus the field the user just opened to edit
+              autoFocus
+              onChange={(e) => setNameDraft(e.target.value)}
+              onKeyDown={onNameKey}
+              className="min-w-0 flex-1 rounded-lg border border-white/15 bg-white/[0.03] px-2.5 py-1.5 font-display text-lg font-medium text-neutral-50 focus:border-[#4f7bff] focus:outline-none"
+            />
+            <IconButton label="Save name" onClick={commitName}>
+              <Check className="size-4 text-emerald-400" />
+            </IconButton>
+            <IconButton label="Cancel" onClick={() => setEditingName(false)}>
+              <X className="size-4" />
+            </IconButton>
+          </div>
+        ) : (
+          <span
+            key={brandKit.name}
+            className="rounded-md px-1 font-display text-xl font-medium text-neutral-50 animate-[kit-flash_0.6s_ease-out]"
           >
-            Name
-          </SectionLabel>
-          {editingName ? (
-            <div className="flex items-center gap-1">
-              <input
-                value={nameDraft}
-                // biome-ignore lint/a11y/noAutofocus: focus the field the user just opened to edit
-                autoFocus
-                onChange={(e) => setNameDraft(e.target.value)}
-                onKeyDown={onNameKey}
-                className="min-w-0 flex-1 rounded-lg border border-white/15 bg-white/[0.03] px-2.5 py-1.5 font-display text-lg font-semibold text-neutral-50 focus:border-[#4f7bff] focus:outline-none"
-              />
-              <IconButton label="Save name" onClick={commitName}>
-                <Check className="size-4 text-emerald-400" />
-              </IconButton>
-              <IconButton label="Cancel" onClick={() => setEditingName(false)}>
-                <X className="size-4" />
-              </IconButton>
-            </div>
-          ) : (
-            <span className="font-display text-xl font-semibold text-neutral-50">
-              {brandKit.name}
-            </span>
-          )}
-        </div>
-      )}
+            {brandKit.name}
+          </span>
+        )}
+      </div>
 
-      {brandKit.logo && (
-        <div className="flex flex-col gap-2">
-          <SectionLabel
-            actions={
+      <div className="flex flex-col gap-2">
+        <SectionLabel
+          actions={
+            brandKit.logo && (
               <IconButton label="Remove logo" onClick={clearLogo}>
                 <Trash2 className="size-3.5" />
               </IconButton>
-            }
-          >
-            Logo
-          </SectionLabel>
+            )
+          }
+        >
+          Logo
+        </SectionLabel>
+        {brandKit.logo ? (
           <div
-            className="grid h-24 place-items-center overflow-hidden rounded-xl border border-white/[0.06] bg-[#0d0d0f] p-3 [&>svg]:max-h-16 [&>svg]:w-auto"
+            key={brandKit.logo.svg}
+            className="grid h-24 animate-[kit-flash_0.6s_ease-out] place-items-center overflow-hidden rounded-xl border border-white/[0.06] bg-[#0d0d0f] px-6 py-3 [&>svg]:h-auto [&>svg]:max-h-16 [&>svg]:w-auto [&>svg]:max-w-full"
             // biome-ignore lint/security/noDangerouslySetInnerHtml: saved mock SVG generated locally
             dangerouslySetInnerHTML={{ __html: brandKit.logo.svg }}
           />
-        </div>
-      )}
+        ) : (
+          <Ghost label="No logo yet" />
+        )}
+      </div>
 
-      {brandKit.colors.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <SectionLabel
-            actions={
+      <div className="flex flex-col gap-2">
+        <SectionLabel
+          actions={
+            brandKit.colors.length > 0 && (
               <>
                 <IconButton label="Edit style" onClick={openStyleEditor}>
                   <SlidersHorizontal className="size-3.5" />
@@ -232,28 +249,34 @@ export function BrandKitContent() {
                   <Trash2 className="size-3.5" />
                 </IconButton>
               </>
-            }
-          >
-            Style
-          </SectionLabel>
-          <div className="flex gap-1.5">
-            {brandKit.colors.map((color) => (
-              <span
-                key={color.role}
-                title={`${color.name} ${color.hex}`}
-                className="h-8 flex-1 rounded-md border border-white/10"
-                style={{ background: color.hex }}
-              />
+            )
+          }
+        >
+          Style
+        </SectionLabel>
+        {brandKit.colors.length > 0 ? (
+          <div className="flex animate-[kit-flash_0.6s_ease-out] flex-col gap-2">
+            <div className="flex gap-1.5">
+              {brandKit.colors.map((color) => (
+                <span
+                  key={color.role}
+                  title={`${color.name} ${color.hex}`}
+                  className="h-8 flex-1 rounded-md border border-white/10"
+                  style={{ background: color.hex }}
+                />
+              ))}
+            </div>
+            {brandKit.fonts.map((font) => (
+              <span key={font.role} className="text-xs text-neutral-300">
+                {font.family}
+                <span className="text-neutral-500"> · {font.role}</span>
+              </span>
             ))}
           </div>
-          {brandKit.fonts.map((font) => (
-            <span key={font.role} className="text-xs text-neutral-300">
-              {font.family}
-              <span className="text-neutral-500"> · {font.role}</span>
-            </span>
-          ))}
-        </div>
-      )}
+        ) : (
+          <Ghost label="No colours or type yet" />
+        )}
+      </div>
 
       {brandKit.colors.length > 0 && (
         <DownloadKitDialog
@@ -315,7 +338,7 @@ export function BrandKitPanel() {
       initial={{ opacity: 0, x: 24 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className="relative z-10 hidden w-80 shrink-0 flex-col overflow-y-auto border-white/[0.06] border-l bg-[#0c0c0e] p-5 lg:flex"
+      className="relative z-10 m-3 mb-4 hidden w-80 shrink-0 flex-col overflow-y-auto rounded-xl bg-[#0c0c0e] p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_8px_30px_-12px_rgba(0,0,0,0.7)] lg:flex"
     >
       <BrandKitContent />
     </motion.aside>

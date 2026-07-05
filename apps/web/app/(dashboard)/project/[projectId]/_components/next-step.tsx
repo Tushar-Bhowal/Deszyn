@@ -15,7 +15,7 @@ export function NextStepCta({ step, label }: { step: NextStep; label: string }) 
       type="button"
       onClick={onClick}
       disabled={isStreaming}
-      className="group inline-flex items-center gap-2 self-start rounded-xl border border-[#2c3d6e] bg-[#111f3d] px-4 py-2.5 text-sm font-medium text-[#cddcff] transition-colors hover:border-[#3a4f88] hover:bg-[#16264d] disabled:cursor-not-allowed disabled:opacity-50"
+      className="group inline-flex items-center gap-2 self-start rounded-xl border border-[#2c3d6e] bg-[#111f3d] px-4 py-2.5 text-sm font-medium text-[#cddcff] transition-[color,background-color,border-color,scale] duration-150 ease-out hover:border-[#3a4f88] hover:bg-[#16264d] enabled:active:scale-[0.96] disabled:cursor-not-allowed disabled:opacity-50"
     >
       <Icon className="size-4 text-[#6f9bff]" />
       {label}

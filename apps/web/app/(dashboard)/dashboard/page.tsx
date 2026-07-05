@@ -11,15 +11,17 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
-        <p className="text-muted-foreground text-sm">Overview of your design activity.</p>
+        <h1 className="text-balance text-2xl font-semibold">Dashboard</h1>
+        <p className="text-pretty text-muted-foreground text-sm">
+          Overview of your design activity.
+        </p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <Card key={stat.label}>
             <CardHeader>
               <CardDescription>{stat.label}</CardDescription>
-              <CardTitle className="text-3xl">{stat.value}</CardTitle>
+              <CardTitle className="text-3xl tabular-nums">{stat.value}</CardTitle>
             </CardHeader>
           </Card>
         ))}

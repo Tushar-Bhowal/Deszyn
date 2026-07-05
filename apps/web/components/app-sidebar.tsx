@@ -116,7 +116,7 @@ export function AppSidebar({
           </div>
           <Button
             asChild
-            className="shrink-0 text-white/80 hover:bg-white/15 hover:text-white group-data-[collapsible=icon]:hidden"
+            className="relative shrink-0 text-white/80 after:absolute after:top-1/2 after:left-1/2 after:size-10 after:-translate-x-1/2 after:-translate-y-1/2 hover:bg-white/15 hover:text-white group-data-[collapsible=icon]:hidden"
             size="icon-sm"
             variant="ghost"
           >

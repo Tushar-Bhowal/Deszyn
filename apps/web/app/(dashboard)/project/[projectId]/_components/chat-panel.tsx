@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { ArrowUpCircle, Palette, PanelLeft, ShieldCheck, Sparkles } from 'lucide-react';
+import { useEffect } from 'react';
 
 import { NoiseTexture } from '@/components/ui/noise-texture';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -23,8 +24,19 @@ const SUGGESTIONS = [
 
 export function ChatPanel() {
   const { messages, sendMessage, brandKit } = useStudio();
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, setOpen } = useSidebar();
   const hasMessages = messages.length > 0;
+
+  // Focus mode hides the sidebar; Esc is its only way back (unless a dialog owns Esc).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !document.querySelector('[role="dialog"]')) {
+        setOpen(true);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [setOpen]);
   const kitProgress = [
     { key: 'name', done: Boolean(brandKit.name) },
     { key: 'logo', done: Boolean(brandKit.logo) },
@@ -33,7 +45,7 @@ export function ChatPanel() {
   const hasKit = kitProgress.some((s) => s.done);
 
   return (
-    <div className="relative flex h-svh flex-col overflow-hidden bg-[#0a0a0b] text-foreground">
+    <div className="relative flex h-svh flex-col overflow-hidden bg-[#0e0e10] text-foreground">
       <GridBackdrop />
       <div
         aria-hidden
@@ -87,11 +99,8 @@ export function ChatPanel() {
               </SheetContent>
             </Sheet>
           )}
-          <button
-            type="button"
-            className="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3.5 py-2 text-sm font-medium text-neutral-200 transition-colors hover:bg-white/[0.06]"
-          >
-            <ArrowUpCircle className="size-4 text-[#6f9bff]" />
+          <button type="button" className="btn-cta-primary rounded-lg px-4 py-2 text-sm">
+            <ArrowUpCircle className="size-4" />
             Upgrade
           </button>
         </div>
@@ -135,7 +144,7 @@ export function ChatPanel() {
               </div>
             </motion.div>
           </main>
-          <footer className="relative z-10 pb-6 text-center text-sm text-neutral-600">
+          <footer className="relative z-10 pb-6 text-center text-sm text-neutral-400">
             Unlock new era with Deszyn.
           </footer>
         </>

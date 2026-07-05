@@ -23,7 +23,7 @@ export function StudioShell({ children }: { children: React.ReactNode }) {
       className={cn('[--app-header-height:3rem]')}
     >
       <AppSidebar collapsible="offcanvas" headerTrigger={false} />
-      <SidebarInset className="bg-[#0a0a0b]">{children}</SidebarInset>
+      <SidebarInset className="bg-[#0e0e10]">{children}</SidebarInset>
     </SidebarProvider>
   );
 }

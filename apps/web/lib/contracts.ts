@@ -37,6 +37,9 @@ export interface DomainResult {
 
 export type NameTone = 'serious' | 'playful' | 'techy' | 'elegant' | 'bold';
 
+/** How adventurous generations should be (Namelix-style randomness dial). */
+export type Creativity = 'safe' | 'balanced' | 'bold';
+
 export interface NameCandidate {
   id: string;
   name: string;
@@ -111,7 +114,8 @@ export type MessageBlock =
   | { type: 'names'; names: NameCandidate[] }
   | { type: 'logos'; logos: LogoConcept[] }
   | { type: 'style' }
-  | { type: 'next'; step: NextStep; label: string };
+  | { type: 'next'; step: NextStep; label: string }
+  | { type: 'examples'; prompts: string[] };
 
 export interface ChatMessage {
   id: string;

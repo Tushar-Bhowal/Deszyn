@@ -9,8 +9,27 @@ import { BrandOutput } from './brand-output';
 import { LoadingBlock } from './loading-block';
 import { LogoOutput } from './logo-output';
 import { NextStepCta } from './next-step';
+import { useStudio } from './studio-provider';
 import { StyleBlockCard } from './style-editor';
 import { LoadingOrb } from './working-indicator';
+
+function PromptExamples({ prompts }: { prompts: string[] }) {
+  const { sendMessage } = useStudio();
+  return (
+    <div className="flex flex-wrap gap-2">
+      {prompts.map((prompt) => (
+        <button
+          key={prompt}
+          type="button"
+          onClick={() => sendMessage(prompt)}
+          className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-xs text-neutral-300 transition-colors hover:bg-white/[0.06] hover:text-neutral-100 active:scale-[0.98]"
+        >
+          {prompt}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 function RichText({ text }: { text: string }) {
   const parts = text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
@@ -43,6 +62,8 @@ function Block({ block }: { block: MessageBlock }) {
       return <StyleBlockCard />;
     case 'next':
       return <NextStepCta step={block.step} label={block.label} />;
+    case 'examples':
+      return <PromptExamples prompts={block.prompts} />;
     default:
       return null;
   }
@@ -82,7 +103,7 @@ export function ChatMessage({ message }: { message: ChatMessageType }) {
                   <img
                     src={attachment.previewUrl}
                     alt={attachment.name}
-                    className="size-6 rounded object-cover"
+                    className="size-6 rounded object-cover [outline:1px_solid_rgba(255,255,255,0.1)] -outline-offset-1"
                   />
                 ) : (
                   <FileText className="size-4 text-neutral-400" />

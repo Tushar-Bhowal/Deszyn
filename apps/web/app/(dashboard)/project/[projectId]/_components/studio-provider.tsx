@@ -8,8 +8,10 @@ import type {
   BrandFont,
   BrandKit,
   ChatMessage,
+  Creativity,
   MessageBlock,
   ModelTier,
+  NameTone,
   Stage,
   WorkStatus,
 } from '@/lib/contracts';
@@ -33,6 +35,8 @@ interface StudioContextValue {
   chosenLogoId: string | null;
   selectedModel: ModelTier;
   setSelectedModel: (model: ModelTier) => void;
+  creativity: Creativity;
+  setCreativity: (value: Creativity) => void;
   attachments: Attachment[];
   addAttachments: (files: Attachment[]) => void;
   removeAttachment: (id: string) => void;
@@ -67,6 +71,24 @@ export function useStudio() {
 
 const EMPTY_KIT: BrandKit = { colors: [], fonts: [] };
 
+const EXAMPLE_PROMPTS = [
+  'A budgeting app for freelancers',
+  'Developer tool for testing APIs',
+  'A marketplace for vintage furniture',
+];
+
+const GREETING = /^(hi|hey+|hello|yo|sup|hola|howdy|test+|ok|okay|thanks|thank you|help|hmm+)\b/i;
+
+/** Greetings, gibberish, or too-thin input shouldn't burn a generation. */
+function isThinInput(text: string): boolean {
+  const t = text.trim();
+  const words = t.split(/\s+/).filter((w) => w.replace(/[^a-z0-9]/gi, '').length > 1);
+  if (t.length < 6 || words.length < 3) return true;
+  if (GREETING.test(t) && words.length < 4) return true;
+  if (!/[aeiou]/i.test(t)) return true; // no vowels → gibberish
+  return false;
+}
+
 export function StudioProvider({ children }: { children: React.ReactNode }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
@@ -78,12 +100,14 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
   const [styleEditorOpen, setStyleEditorOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState<ModelTier>('opus-4-8');
   const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [creativity, setCreativity] = useState<Creativity>('balanced');
+  const [savedTone, setSavedTone] = useState<NameTone | undefined>(undefined);
 
   const abortRef = useRef<AbortController | null>(null);
   const streamingRef = useRef(false);
   // Latest values for cross-action reads without stale closures / dep churn.
-  const stateRef = useRef({ chosenNameId, chosenLogoId, brandKit });
-  stateRef.current = { chosenNameId, chosenLogoId, brandKit };
+  const stateRef = useRef({ chosenNameId, chosenLogoId, brandKit, creativity, savedTone });
+  stateRef.current = { chosenNameId, chosenLogoId, brandKit, creativity, savedTone };
 
   const addAttachments = useCallback((files: Attachment[]) => {
     setAttachments((prev) => [...prev, ...files]);
@@ -172,12 +196,31 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
   const sendMessage = useCallback(
     (text: string) => {
       const trimmed = text.trim();
-      if (!trimmed) return;
+      if (!trimmed || streamingRef.current) return;
+
+      // Greetings / gibberish / too-thin input: clarify instead of burning a generation.
+      if (isThinInput(trimmed)) {
+        setMessages((prev) => [
+          ...prev,
+          { id: crypto.randomUUID(), role: 'user', content: trimmed, createdAt: Date.now() },
+          {
+            id: crypto.randomUUID(),
+            role: 'assistant',
+            content: 'Tell me what your product does — one line is enough.',
+            block: { type: 'examples', prompts: EXAMPLE_PROMPTS },
+            createdAt: Date.now(),
+          },
+        ]);
+        return;
+      }
+
+      const cr = stateRef.current.creativity;
+      const bias = stateRef.current.savedTone;
       runTurn({
         userText: trimmed,
         status: 'generating_names',
-        buildIntro: () => namesIntro(trimmed),
-        buildBlock: () => ({ type: 'names', names: mockNames() }),
+        buildIntro: () => namesIntro(trimmed, cr, bias),
+        buildBlock: () => ({ type: 'names', names: mockNames(cr, bias) }),
       });
     },
     [runTurn],
@@ -189,6 +232,7 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
     const candidate = mockNames().find((n) => n.id === stateRef.current.chosenNameId);
     if (!candidate) return;
     setBrandKit((prev) => ({ ...prev, name: candidate.name }));
+    setSavedTone(candidate.tone);
     setStage('name_saved');
     pushAssistant(`Saved — **${candidate.name}** is in your brand kit. Ready to design a logo?`, {
       type: 'next',
@@ -270,6 +314,7 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
     setStage('naming');
     setChosenNameId(null);
     setChosenLogoId(null);
+    setSavedTone(undefined);
     setStyleEditorOpen(false);
     setStatus('idle');
     streamingRef.current = false;
@@ -291,6 +336,8 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
       chosenLogoId,
       selectedModel,
       setSelectedModel,
+      creativity,
+      setCreativity,
       attachments,
       addAttachments,
       removeAttachment,
@@ -321,6 +368,7 @@ export function StudioProvider({ children }: { children: React.ReactNode }) {
       chosenNameId,
       chosenLogoId,
       selectedModel,
+      creativity,
       attachments,
       addAttachments,
       removeAttachment,
